@@ -1,0 +1,17 @@
+Btn {
+    border: none;
+    border-radius: 20px;
+    background-color: #e7e7e7;
+    padding: 10px;
+    margin: 3px;
+    /*box-shadow: -10px 10px 20px #262626;*/
+}
+
+QLabel {
+    font-size: 40px;
+    color: aliceblue;
+    font-weight: bold;
+}
+Btn:hover {
+    background-color: #a4a4e5;
+}
