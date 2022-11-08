@@ -1,0 +1,48 @@
+QLabel#lb1{
+    font-size: 40px;
+    color: aliceblue;
+    font-weight: bold;
+}
+
+QLabel#lb2{
+    font-size: 20px;
+    color: #c7c6c6;
+    font-family: "Monotype Corsiva", "Apple Chancery", "URW Chancery L", cursive;
+    margin-bottom: 50px;
+}
+
+QLineEdit#field {
+    /*transition: all .2s ease-in-out;*/
+    border: none;
+    background-color: #e7e7e7;
+    margin: 10px;
+    padding: 20px;
+    border-radius: 25px;
+    color: #0000ff;
+    /*transform: scale(1.1);*/
+}
+
+QPushButton#login{
+    border: none;
+    margin: 10px;
+    padding: 20px;
+    background-color: #005aff;
+    color: white;
+    font-weight: bold;
+    border-radius: 25px;
+    font-size: 18px;
+}
+
+QPushButton#back{
+    border: none;
+    background-color: #163c86;
+    border-radius: 10px;
+}
+
+QPushButton#back:hover{
+    background-color: #005aff;
+}
+
+QPushButton#login:hover {
+    background-color: #2a75f5;
+}

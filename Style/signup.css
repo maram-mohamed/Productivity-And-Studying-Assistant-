@@ -1,0 +1,38 @@
+QLabel#lb1 {
+    font-size: 40px;
+    color: aliceblue;
+    font-weight: bold;
+
+}
+
+QLineEdit#field {
+    /*transition: all .2s ease-in-out;*/
+    border: none;
+    background-color: #e7e7e7;
+    margin: 10px;
+    padding: 15px;
+    border-radius: 15px;
+    color: #0000ff;
+    /*transform: scale(1.1);*/
+}
+
+QPushButton#back{
+    border: none;
+    background-color: #163c86;
+    border-radius: 10px;
+}
+
+QPushButton#back:hover{
+    background-color: #005aff;
+}
+
+QPushButton#signup{
+    border: none;
+    margin: 10px;
+    padding: 15px;
+    background-color: #005aff;
+    color: white;
+    font-weight: bold;
+    border-radius: 15px;
+    font-size: 18px;
+}
