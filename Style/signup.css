@@ -36,3 +36,25 @@ QPushButton#signup{
     border-radius: 15px;
     font-size: 18px;
 }
+
+QMessageBox {
+    background-color: #ffffff;
+}
+
+QMessageBox QLabel {
+    color: #ce0303;
+    background-color: #ffffff;
+}
+
+QMessageBox QPushButton {
+    background-color: #005aff;
+    color: white;
+    padding: 5px 20px;
+    border-radius: 10px;
+    border: none;
+    font-weight: bold;
+}
+
+QMessageBox QPushButton:hover {
+    background-color: #2a75f5;
+}
