@@ -235,32 +235,32 @@ class Home(QWidget):
         def to_timer():
             Windows.setCurrentIndex(5)
 
-        task.clicked.connect(to_task)
+        timer.clicked.connect(to_timer)
 
         def to_note():
             Windows.setCurrentIndex(6)
 
-        task.clicked.connect(to_task)
+        note.clicked.connect(to_note)
 
         def to_converter():
             Windows.setCurrentIndex(7)
 
-        task.clicked.connect(to_task)
+        converter.clicked.connect(to_converter)
 
         def to_translator():
             Windows.setCurrentIndex(8)
 
-        task.clicked.connect(to_task)
+        translator.clicked.connect(to_translator)
 
         def to_graph():
             Windows.setCurrentIndex(9)
 
-        task.clicked.connect(to_task)
+        graph.clicked.connect(to_graph)
+
         main_layout.addWidget(txt)
         main_layout.addLayout(l1)
         main_layout.addLayout(l2)
         self.setLayout(main_layout)
-
 
 class Task(QWidget):
     def __init__(self):
