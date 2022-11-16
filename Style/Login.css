@@ -1,5 +1,5 @@
 QLabel#lb1{
-    font-size: 40px;
+    font-size: 60px;
     color: aliceblue;
     font-weight: bold;
 }
@@ -7,19 +7,17 @@ QLabel#lb1{
 QLabel#lb2{
     font-size: 20px;
     color: #c7c6c6;
-    font-family: "Monotype Corsiva", "Apple Chancery", "URW Chancery L", cursive;
-    margin-bottom: 50px;
+    font-family: "Gill Sans", "Gill Sans MT", Calibri, "Lucida Sans", "Noto Sans", sans-serif;
 }
 
 QLineEdit#field {
-    /*transition: all .2s ease-in-out;*/
     border: none;
     background-color: #e7e7e7;
     margin: 10px;
     padding: 20px;
-    border-radius: 25px;
+    border-radius: 10px;
+    font-weight: bold;
     color: #0000ff;
-    /*transform: scale(1.1);*/
 }
 
 QPushButton#login{
@@ -29,13 +27,13 @@ QPushButton#login{
     background-color: #005aff;
     color: white;
     font-weight: bold;
-    border-radius: 25px;
+    border-radius: 10px;
     font-size: 18px;
 }
 
 QPushButton#back{
     border: none;
-    background-color: #163c86;
+    background-color: rgba(22, 60, 134, 0);
     border-radius: 10px;
 }
 

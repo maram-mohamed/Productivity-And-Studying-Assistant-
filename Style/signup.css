@@ -6,19 +6,18 @@ QLabel#lb1 {
 }
 
 QLineEdit#field {
-    /*transition: all .2s ease-in-out;*/
     border: none;
     background-color: #e7e7e7;
     margin: 10px;
     padding: 15px;
-    border-radius: 15px;
+    border-radius: 10px;
+    font-weight: bold;
     color: #0000ff;
-    /*transform: scale(1.1);*/
 }
 
 QPushButton#back{
     border: none;
-    background-color: #163c86;
+    background-color: rgba(22, 60, 134, 0.01);
     border-radius: 10px;
 }
 
@@ -35,6 +34,9 @@ QPushButton#signup{
     font-weight: bold;
     border-radius: 15px;
     font-size: 18px;
+}
+QPushButton#signup:hover {
+    background-color: #2a75f5;
 }
 
 QMessageBox {

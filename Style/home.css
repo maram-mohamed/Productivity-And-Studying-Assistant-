@@ -1,3 +1,57 @@
-QPixmap {
-    border-radius: 200px;
+QLabel#name {
+    font-size: 20px;
+    color: #c7c6c6;
+    background-color: #6e7b91;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+QLabel#title {
+    font-weight: bold;
+    font-family: "Gill Sans", "Gill Sans MT", Calibri, "Lucida Sans", "Noto Sans", sans-serif;
+    font-size: 30px;
+    color: white;
+    text-align: center;
+}
+QPushButton {
+    color: white;
+    border: none;
+}
+
+QInputDialog QLineEdit{
+    border: none;
+    background-color: #e7e7e7;
+    margin: 10px;
+    padding: 10px;
+    width: 300px;
+    border-radius: 10px;
+    color: #000000;
+    font-weight: bold;
+}
+QInputDialog QLabel{
+    color: #ffffff;
+    font-weight: bold;
+}
+
+
+QMessageBox {
+    background-color: #ffffff;
+}
+
+QMessageBox QLabel {
+    color: #ce0303;
+    background-color: #ffffff;
+}
+
+QMessageBox QPushButton {
+    background-color: #005aff;
+    color: white;
+    padding: 5px 20px;
+    border-radius: 10px;
+    border: none;
+    font-weight: bold;
+}
+
+QMessageBox QPushButton:hover {
+    background-color: #2a75f5;
 }
