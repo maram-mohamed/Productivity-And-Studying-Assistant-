@@ -1,5 +1,5 @@
 QLabel#wel {
-    color: #61a4d0;
+    color: #fafbfc;
     font-size: 30px;
     font-weight: bold;
     margin-top: 50px;
@@ -7,7 +7,7 @@ QLabel#wel {
 }
 
 QLabel#txt2 {
-    color: #61a4d0;
+    color: #f9fbfc;
     font-size: 40px;
     font-weight: bold;
     margin-bottom: 150px;
@@ -20,7 +20,7 @@ QPushButton#login{
     background-color: #005aff;
     color: white;
     font-weight: bold;
-    border-radius: 25px;
+    border-radius: 10px;
     font-size: 18px;
 }
 

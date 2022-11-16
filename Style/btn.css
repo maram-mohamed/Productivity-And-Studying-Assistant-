@@ -1,10 +1,9 @@
 Btn {
     border: none;
-    border-radius: 20px;
-    background-color: #e7e7e7;
+    border-radius: 10px;
+    background-color: #faf9f9;
     padding: 10px;
     margin: 3px;
-    /*box-shadow: -10px 10px 20px #262626;*/
 }
 
 QLabel {
@@ -13,5 +12,5 @@ QLabel {
     font-weight: bold;
 }
 Btn:hover {
-    background-color: #a4a4e5;
+    background-color: #00c2e7;
 }
