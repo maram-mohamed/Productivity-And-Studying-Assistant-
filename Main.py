@@ -9,6 +9,9 @@ from PyQt5.QtCore import *
 db = sqlite3.connect('Data.db')
 cr = db.cursor()
 cr.execute("Create table if not exists user(name text, email text, password text, ID int auto_increment primary key)")
+task_cr = db.cursor()
+task_cr.execute("Create table if not exists tasks(task text, email text)")
+task_cr.execute("Create table if not exists pomodoro(task text, email text)")
 
 
 class WelcomePage(QWidget):
@@ -110,8 +113,8 @@ class LoginPage(QWidget):
             elif len(result) >= 1:
                 # SET USER DATA
                 home_page = Home(result[0][0], email_field.text(), password_field.text())
-                Windows.addWidget(home_page)  # 9
-                Windows.setCurrentIndex(9)
+                Windows.addWidget(home_page)  # 8
+                Windows.setCurrentIndex(8)
             else:
                 QMessageBox.warning(self, "warning", "Email and Password are incorrect", QMessageBox.Ok)
 
@@ -138,6 +141,7 @@ class SignPage(QWidget):
 
         lb1 = QLabel("Sign Up")
         lb1.setObjectName("lb1")
+        lb1.setAlignment(Qt.AlignCenter)
 
         name = QLineEdit()
         name.setPlaceholderText("Your Name")
@@ -181,9 +185,9 @@ class SignPage(QWidget):
                 db.commit()
                 db.close()
                 home_p = Home(name.text(), email_field.text(), password_field.text())
-                home_p.show()
+                # home_p.show()
                 Windows.addWidget(home_p)
-                Windows.setCurrentIndex(9)
+                Windows.setCurrentIndex(8)
 
         signup_btn.clicked.connect(sign)
 
@@ -220,7 +224,7 @@ class Home(QWidget):
             style = file.read()
             self.setStyleSheet(style)
         main_layout = QVBoxLayout()
-        main_layout.setContentsMargins(50, 20, 50, 50)
+        main_layout.setContentsMargins(30, 20, 30, 30)
 
         home_icon = QPushButton()
         home_icon.setIcon(QIcon("Icons/home.png"))
@@ -231,6 +235,8 @@ class Home(QWidget):
         change_name = QPushButton()
         change_name.setIcon(QIcon("Icons/pencil.png"))
         change_name.setIconSize(QSize(20, 20))
+        change_name.setFixedSize(35, 35)
+        change_name.setObjectName("pen")
 
         def c_name():
             text, ok = QInputDialog().getText(self, "Change Your Name", "User name:", QLineEdit.Normal)
@@ -250,6 +256,8 @@ class Home(QWidget):
         change_email = QPushButton()
         change_email.setIcon(QIcon("Icons/pencil.png"))
         change_email.setIconSize(QSize(20, 20))
+        change_email.setFixedSize(35, 35)
+        change_email.setObjectName("pen")
 
         def c_email():
             text, ok = QInputDialog().getText(self, "Change Your Email", "Email :", QLineEdit.Normal)
@@ -281,6 +289,8 @@ class Home(QWidget):
         change_pass = QPushButton()
         change_pass.setIcon(QIcon("Icons/pencil.png"))
         change_pass.setIconSize(QSize(20, 20))
+        change_pass.setFixedSize(35, 35)
+        change_pass.setObjectName("pen")
 
         def c_pass():
             text, ok = QInputDialog().getText(self, "Change Your Name", "User name:", QLineEdit.Normal)
@@ -300,55 +310,100 @@ class Home(QWidget):
         txt4.setObjectName("title")
         txt4.setAlignment(Qt.AlignCenter)
 
-        l1 = QHBoxLayout()
-        l2 = QHBoxLayout()
+        hl1 = QHBoxLayout()
+        hl2 = QHBoxLayout()
 
+        vl1 = QVBoxLayout()
+        vl2 = QVBoxLayout()
+        vl3 = QVBoxLayout()
+        vl4 = QVBoxLayout()
+        vl5 = QVBoxLayout()
+        vl6 = QVBoxLayout()
         task = Btn("Icons/task.png")
+        l_task = QLabel("Tasks")
+        l_task.setObjectName("IconLabel")
+        l_task.setAlignment(Qt.AlignCenter)
+        vl1.addWidget(task)
+        vl1.addWidget(l_task)
+
         timer = Btn("Icons/timer.png")
+        l_timer = QLabel("Pomodoro")
+        l_timer.setObjectName("IconLabel")
+        l_timer.setAlignment(Qt.AlignCenter)
+        vl2.addWidget(timer)
+        vl2.addWidget(l_timer)
+
         note = Btn("Icons/Note.png")
-        l1.addWidget(task)
-        l1.addWidget(timer)
-        l1.addWidget(note)
+        l_note = QLabel("Note")
+        l_note.setObjectName("IconLabel")
+        l_note.setAlignment(Qt.AlignCenter)
+        vl3.addWidget(note)
+        vl3.addWidget(l_note)
+
+        hl1.addLayout(vl1)
+        hl1.addLayout(vl2)
+        hl1.addLayout(vl3)
 
         converter = Btn("Icons/converter.png")
+        l_converter = QLabel("Converter")
+        l_converter.setObjectName("IconLabel")
+        l_converter.setAlignment(Qt.AlignCenter)
+        vl4.addWidget(converter)
+        vl4.addWidget(l_converter)
+
         translator = Btn("Icons/translator.png")
+        l_translator = QLabel("translator")
+        l_translator.setObjectName("IconLabel")
+        l_translator.setAlignment(Qt.AlignCenter)
+        vl5.addWidget(translator)
+        vl5.addWidget(l_translator)
+
         graph = Btn("Icons/graph.png")
-        l2.addWidget(converter)
-        l2.addWidget(translator)
-        l2.addWidget(graph)
+        l_graph = QLabel("graph")
+        l_graph.setObjectName("IconLabel")
+        l_graph.setAlignment(Qt.AlignCenter)
+        vl6.addWidget(graph)
+        vl6.addWidget(l_graph)
+
+        hl2.addLayout(vl4)
+        hl2.addLayout(vl5)
+        hl2.addLayout(vl6)
 
         btn_lay = QVBoxLayout()
-        btn_lay.addLayout(l1)
-        btn_lay.addLayout(l2)
-        btn_lay.setSpacing(10)
+        btn_lay.addLayout(hl1)
+        btn_lay.addLayout(hl2)
+        btn_lay.insertSpacing(1, 20)
+        btn_lay.setSpacing(2)
 
         def to_task():
-            Windows.setCurrentIndex(3)
+            task_page.set_email(email)
+            Windows.addWidget(task_page)
+            Windows.setCurrentIndex(Windows.count() - 1)
 
         task.clicked.connect(to_task)
 
         def to_timer():
-            Windows.setCurrentIndex(4)
+            Windows.setCurrentIndex(3)
 
         timer.clicked.connect(to_timer)
 
         def to_note():
-            Windows.setCurrentIndex(5)
+            Windows.setCurrentIndex(4)
 
         note.clicked.connect(to_note)
 
         def to_converter():
-            Windows.setCurrentIndex(6)
+            Windows.setCurrentIndex(5)
 
         converter.clicked.connect(to_converter)
 
         def to_translator():
-            Windows.setCurrentIndex(7)
+            Windows.setCurrentIndex(6)
 
         translator.clicked.connect(to_translator)
 
         def to_graph():
-            Windows.setCurrentIndex(8)
+            Windows.setCurrentIndex(7)
 
         graph.clicked.connect(to_graph)
 
@@ -358,15 +413,134 @@ class Home(QWidget):
         main_layout.addLayout(pass_lay)
         main_layout.addWidget(txt4)
         main_layout.addLayout(btn_lay)
-        main_layout.setSpacing(30)
+        main_layout.setSpacing(20)
         main_layout.insertSpacing(4, 50)
         self.setLayout(main_layout)
 
 
-class Task(QWidget):
-    def __init__(self):
+class TaskButton(QPushButton):
+    def __init__(self, task, email):
+        super().__init__(f"   {task}")
+        self.setIcon(QIcon("Icons/check.png"))
+
+        def update():
+            task_cr.execute(f"insert into pomodoro values ('{task}','{email}')")
+            db.commit()
+            task_cr.execute(f"delete from tasks where task='{task}' and email='{email}'")
+            db.commit()
+            task_page.ClearLayout(task_page.main_lay)
+            task_page.reload_UI()
+
+        self.clicked.connect(update)
+
+
+class Task(QMainWindow):
+    def __init__(self, email):
         super().__init__()
         # Mostafa
+        self.email = email
+        self.widget = QWidget()
+        with open("Style/task.css") as file:
+            style = file.read()
+            self.widget.setStyleSheet(style)
+        self.setStyleSheet("QScrollBar{ background-color: none }")
+
+        self.scroll = QScrollArea()
+        self.main_lay = QVBoxLayout()
+        self.main_lay.setContentsMargins(20, 50, 20, 10)
+
+        back = QPushButton(self.widget)
+        back.setObjectName("back")
+        back.setIcon(QIcon('Icons/previous.png'))
+        back.setGeometry(20, 10, 30, 30)
+
+        self.logo = QPushButton()
+        self.logo.setIcon(QIcon("Icons/task.png"))
+        self.logo.setIconSize(QSize(60, 60))
+        self.logo.setObjectName("logo")
+
+        self.title = QLabel("To-Do List")
+        self.title.setObjectName("title")
+        self.title.setAlignment(Qt.AlignCenter)
+
+        self.add = QPushButton()
+        self.add.setObjectName("add")
+        self.add.setIcon(QIcon("Icons/add.png"))
+        self.add.setIconSize(QSize(20, 20))
+        self.add.setFixedWidth(40)
+
+        note = QLabel("On clicking on a task \nit will be moved to Pomodoro technique")
+        note.setObjectName("note")
+
+        self.add_lay = QHBoxLayout()
+        self.add_lay.addWidget(note)
+        self.add_lay.addWidget(self.add)
+
+        self.sub_title = QLabel("Your To-Do List")
+        self.sub_title.setObjectName("sub")
+        self.sub_title.setAlignment(Qt.AlignCenter)
+
+        self.scroll.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
+        self.scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
+        self.scroll.setWidgetResizable(True)
+        self.scroll.setWidget(self.widget)
+        self.setCentralWidget(self.scroll)
+        self.setCentralWidget(self.scroll)
+        self.resize(300, 200)
+        self.reload_UI()
+
+        def go_back():
+            Windows.setCurrentIndex(8)
+
+        back.clicked.connect(go_back)
+
+    def add_item(self):
+        text, ok = QInputDialog().getText(self.widget, "Add new task", "New Task : ", QLineEdit.Normal)
+        if ok:
+            task_cr.execute(f"insert into tasks values ('{text}','{self.email}')")
+            db.commit()
+            self.ClearLayout(self.main_lay)
+            self.reload_UI()
+
+    def set_email(self, email):
+        self.email = email
+        self.add.clicked.connect(self.add_item)
+        self.ClearLayout(self.main_lay)
+        self.reload_UI()
+
+    def reload_UI(self):
+        self.main_lay.addWidget(self.logo)
+        self.main_lay.addWidget(self.title)
+        self.main_lay.addLayout(self.add_lay)
+        self.main_lay.addWidget(self.sub_title)
+        self.main_lay.alignment()
+        task_cr.execute(f"select task from tasks where email='{self.email}'")
+        tasks = task_cr.fetchall()
+        if len(tasks) == 0:
+            self.sub_title.setText("Your To-Do List Is Empty")
+        else:
+            self.sub_title.setText("Your To-Do List")
+
+        for task in tasks:
+            add_task = TaskButton(task[0], self.email)
+            add_task.setObjectName("task")
+            self.main_lay.addWidget(add_task)
+        self.main_lay.insertSpacing(2, 40)
+        self.widget.setLayout(self.main_lay)
+
+    def ClearLayout(self, layout):
+        if layout is not None:
+            while layout.count():
+                child = layout.takeAt(0)
+                if child.widget() == self.sub_title or \
+                        child.widget() == self.title or \
+                        child.layout() == self.add_lay or \
+                        child.widget() == self.logo:
+                    continue
+                if child.widget() is not None:
+                    child.widget().deleteLater()
+                elif child.layout() is not None:
+                    self.ClearLayout(child.layout())
 
 
 class Timer(QWidget):
@@ -400,17 +574,17 @@ class Graph(QWidget):
 
 
 app = QApplication(sys.argv)
+task_page = Task("test")
 Windows = QStackedWidget()
 Windows.setGeometry(500, 100, 400, 600)
 Windows.setStyleSheet('background-color: #00314f')
 Windows.addWidget(WelcomePage())  # 0
 Windows.addWidget(LoginPage())  # 1
 Windows.addWidget(SignPage())  # 2
-Windows.addWidget(Task())  # 3
-Windows.addWidget(Timer())  # 4
-Windows.addWidget(Note())  # 5
-Windows.addWidget(Converter())  # 6
-Windows.addWidget(Translator())  # 7
-Windows.addWidget(Graph())  # 8
+Windows.addWidget(Timer())  # 3
+Windows.addWidget(Note())  # 4
+Windows.addWidget(Converter())  # 5
+Windows.addWidget(Translator())  # 6
+Windows.addWidget(Graph())  # 7
 Windows.show()
 sys.exit(app.exec_())
