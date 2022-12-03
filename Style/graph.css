@@ -1,0 +1,42 @@
+QLabel#per{
+    color: #fafbfc;
+    font-size: 30px;
+    font-weight: bold;
+    margin-top: 20px;
+    text-align: center;
+}
+QLabel#graphh{
+    font-size: 30px;
+    color: #c7c6c6;
+    font-family: "Gill Sans", "Gill Sans MT", Calibri, "Lucida Sans", "Noto Sans", sans-serif;
+    margin top:40px;
+    text-align: center;
+}
+QLineEdit#grade{
+    border: none;
+    background-color: #e7e7e7;
+    margin: 5px;
+    padding: 20px;
+    border-radius: 10px;
+    font-weight: bold;
+    color: #0000ff;
+}
+QLabel#graph{
+    font-size: 20px;
+    color: #c7c6c6;
+    font-family: "Gill Sans", "Gill Sans MT", Calibri, "Lucida Sans", "Noto Sans", sans-serif;
+    margin top:50
+}
+QPushButton#show{
+    border: none;
+    margin: 10px;
+    padding: 20px;
+    background-color: #005aff;
+    color: white;
+    font-weight: bold;
+    border-radius: 10px;
+    font-size: 18px;
+}
+QPushButton#show:hover {
+    background-color: #2a75f5;
+}

@@ -5,6 +5,9 @@ from PyQt5.QtGui import *
 import sqlite3
 import re
 from PyQt5.QtCore import *
+from PyQt5 import QtWidgets
+from pyqtgraph import PlotWidget, plot
+import pyqtgraph as pg
 
 db = sqlite3.connect('Data.db')
 cr = db.cursor()
@@ -567,10 +570,56 @@ class Translator(QWidget):
         # Soha
 
 
+class GraphWindow(QMainWindow):
+
+    def __init__(self, grade, exams, *args, **kwargs):
+        super(GraphWindow, self).__init__(*args, **kwargs)
+
+        self.graphWidget = pg.PlotWidget()
+        self.setCentralWidget(self.graphWidget)
+
+        self.graphWidget.plot(exams, grade)
+
+
 class Graph(QWidget):
     def __init__(self):
         super().__init__()
         # Maram
+        with open('style/graph.css') as file:
+            style = file.read()
+            self.setStyleSheet(style)
+        self.graph = None
+        graph_text = QLabel("Performance analysis on a graph diagram")
+        graph_text.setObjectName("per")
+        graph_sub_text = QLabel("enter your grade from 1 to 100")
+        graph_sub_text.setObjectName("graphh")
+        main_layout = QVBoxLayout()
+
+        grade_field = QLineEdit()
+
+        grade_field.setObjectName("grade")
+        graph_sub_text2 = QLabel("*there should be a space between each grade*")
+        graph_sub_text2.setObjectName("graph")
+        b1 = QPushButton('show graph')
+        b1.setObjectName("show")
+
+        main_layout.addWidget(graph_text)
+        main_layout.addWidget(graph_sub_text)
+        main_layout.addWidget(grade_field)
+        main_layout.addWidget(graph_sub_text2)
+        main_layout.addWidget(b1)
+        self.setLayout(main_layout)
+
+        def show_graph():
+            if self.graph is None:
+                grade = grade_field.text().split()
+                for i in range(0, len(grade), 1):
+                    grade[i] = int(grade[i])
+                exams = list(range(1, len(grade) + 1))
+                self.graph = GraphWindow(grade, exams)
+            self.graph.show()
+
+        b1.clicked.connect(show_graph)
 
 
 app = QApplication(sys.argv)
