@@ -6,6 +6,9 @@ from PyQt5.QtGui import *
 import sqlite3
 import re
 from PyQt5.QtCore import *
+from PyQt5 import QtWidgets
+from pyqtgraph import PlotWidget, plot
+import pyqtgraph as pg
 
 db = sqlite3.connect('Data.db')
 cr = db.cursor()
@@ -352,14 +355,14 @@ class Home(QWidget):
         vl4.addWidget(l_converter)
 
         translator = Btn("Icons/translator.png")
-        l_translator = QLabel("translator")
+        l_translator = QLabel("Translator")
         l_translator.setObjectName("IconLabel")
         l_translator.setAlignment(Qt.AlignCenter)
         vl5.addWidget(translator)
         vl5.addWidget(l_translator)
 
         graph = Btn("Icons/graph.png")
-        l_graph = QLabel("graph")
+        l_graph = QLabel("Graph")
         l_graph.setObjectName("IconLabel")
         l_graph.setAlignment(Qt.AlignCenter)
         vl6.addWidget(graph)
@@ -724,10 +727,62 @@ class Translator(QWidget):
         # Soha
 
 
+class GraphWindow(QMainWindow):
+
+    def __init__(self, grade, exams, *args, **kwargs):
+        super(GraphWindow, self).__init__(*args, **kwargs)
+
+        self.graphWidget = pg.PlotWidget()
+        self.setCentralWidget(self.graphWidget)
+
+        self.graphWidget.plot(exams, grade)
+
+
 class Graph(QWidget):
     def __init__(self):
         super().__init__()
         # Maram
+        with open('style/graph.css') as file:
+            style = file.read()
+            self.setStyleSheet(style)
+        self.graph = None
+        logo = QPushButton()
+        logo.setIcon(QIcon("Icons/graph.png"))
+        logo.setObjectName("logo")
+        logo.setIconSize(QSize(60, 60))
+        graph_text = QLabel("Performance analysis\n on a graph diagram")
+        graph_text.setAlignment(Qt.AlignCenter)
+        graph_text.setObjectName("per")
+        graph_sub_text = QLabel("enter your grade from 1 to 100")
+        graph_sub_text.setObjectName("graphh")
+
+        grade_field = QLineEdit()
+        grade_field.setObjectName("grade")
+        graph_sub_text2 = QLabel("*there should be a space between each grade*")
+        graph_sub_text2.setObjectName("graph")
+        b1 = QPushButton('show graph')
+        b1.setObjectName("show")
+
+        main_layout = QVBoxLayout()
+        main_layout.setContentsMargins(20, 20, 20, 50)
+        main_layout.addWidget(logo)
+        main_layout.addWidget(graph_text)
+        main_layout.addWidget(graph_sub_text)
+        main_layout.addWidget(graph_sub_text2)
+        main_layout.addWidget(grade_field)
+        main_layout.addWidget(b1)
+        self.setLayout(main_layout)
+
+        def show_graph():
+            if self.graph is None:
+                grade = grade_field.text().split()
+                for i in range(0, len(grade), 1):
+                    grade[i] = int(grade[i])
+                exams = list(range(1, len(grade) + 1))
+                self.graph = GraphWindow(grade, exams)
+            self.graph.show()
+
+        b1.clicked.connect(show_graph)
 
 
 app = QApplication(sys.argv)
