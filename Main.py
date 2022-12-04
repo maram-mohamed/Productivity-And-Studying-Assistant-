@@ -1,4 +1,5 @@
 import sys
+from PyQt5 import sip
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
@@ -117,7 +118,7 @@ class LoginPage(QWidget):
                 # SET USER DATA
                 home_page = Home(result[0][0], email_field.text(), password_field.text())
                 Windows.addWidget(home_page)  # 8
-                Windows.setCurrentIndex(8)
+                Windows.setCurrentIndex(Windows.count() - 1)
             else:
                 QMessageBox.warning(self, "warning", "Email and Password are incorrect", QMessageBox.Ok)
 
@@ -188,9 +189,8 @@ class SignPage(QWidget):
                 db.commit()
                 db.close()
                 home_p = Home(name.text(), email_field.text(), password_field.text())
-                # home_p.show()
                 Windows.addWidget(home_p)
-                Windows.setCurrentIndex(8)
+                Windows.setCurrentIndex(Windows.count() - 1)
 
         signup_btn.clicked.connect(sign)
 
@@ -386,27 +386,29 @@ class Home(QWidget):
         task.clicked.connect(to_task)
 
         def to_timer():
-            Windows.setCurrentIndex(3)
+            timer_page.set_data(email)
+            Windows.addWidget(timer_page)
+            Windows.setCurrentIndex(Windows.count() - 1)
 
         timer.clicked.connect(to_timer)
 
         def to_note():
-            Windows.setCurrentIndex(4)
+            Windows.setCurrentIndex(3)
 
         note.clicked.connect(to_note)
 
         def to_converter():
-            Windows.setCurrentIndex(5)
+            Windows.setCurrentIndex(4)
 
         converter.clicked.connect(to_converter)
 
         def to_translator():
-            Windows.setCurrentIndex(6)
+            Windows.setCurrentIndex(5)
 
         translator.clicked.connect(to_translator)
 
         def to_graph():
-            Windows.setCurrentIndex(7)
+            Windows.setCurrentIndex(6)
 
         graph.clicked.connect(to_graph)
 
@@ -493,7 +495,7 @@ class Task(QMainWindow):
         self.reload_UI()
 
         def go_back():
-            Windows.setCurrentIndex(8)
+            Windows.setCurrentIndex(7)
 
         back.clicked.connect(go_back)
 
@@ -547,9 +549,164 @@ class Task(QMainWindow):
 
 
 class Timer(QWidget):
-    def __init__(self):
+    def __init__(self, email):
         super().__init__()
-        # Madboly
+        with open("Style/promo.css") as file:
+            style = file.read()
+            self.setStyleSheet(style)
+
+        self.email = 'test'
+        self.s = 5
+        self.m = 0
+
+        back = QPushButton(self)
+        back.setObjectName("back")
+        back.setIcon(QIcon('Icons/previous.png'))
+        back.setGeometry(20, 10, 30, 30)
+
+        def go_back():
+            Windows.setCurrentIndex(7)
+
+        back.clicked.connect(go_back)
+
+        self.main_layout = QVBoxLayout()
+        self.main_layout.setContentsMargins(30, 150, 30, 30)
+        self.main_layout.setSpacing(10)
+
+        self.setWindowTitle("                                               MY Pomodoro")
+
+        self.time_lab = QLabel("25:00", self)
+        self.time_lab.setGeometry(180, 65, 150, 100)
+        self.time_lab.resize(114, 60)
+        self.time_lab.setObjectName("la")
+        self.time_lab.setAlignment(Qt.AlignCenter)
+
+        self.sub_tit = QLabel(" My Pomodoro")
+        self.sub_tit.setObjectName("sub")
+        self.sub_tit.setAlignment(Qt.AlignCenter)
+
+
+        self.empty_tit = QLabel("You list is Empty please go to\n 'To Do list'\n and choose the tasks")
+        self.empty_tit.setObjectName("sub")
+        self.empty_tit.setAlignment(Qt.AlignCenter)
+
+        self.finish = QLabel("You finsh your tasks\n successfullygo to'To_Do list' \nand choose the tasks ")
+        self.finish.setObjectName("sub")
+        self.finish.setAlignment(Qt.AlignCenter)
+
+        self.ti = QTimer()
+        self.ti.setInterval(1000)
+
+    def delete_data(self):
+        task_cr.execute(f"delete from pomodoro where email='{self.email}'")
+        db.commit()
+    def stop(self):
+        self.ti.stop()
+    def start(self):
+        self.ti.start()
+
+    def re(self):
+        self.m = 25
+        self.s = 0
+        self.time_lab.setText(f"25:00")
+
+    def counter(self):
+        if self.s == 0 and self.m == 0:
+            self.stop()
+            self.ClearLayout(self.main_layout)
+            self.main_layout.addWidget(self.finish)
+            self.add_but()
+            self.delete_data()
+            self.m = 25
+
+        elif self.s == 0:
+            self.m = self.m - 1
+            self.s = 60
+        else:
+            self.s = self.s - 1
+        self.time_lab.setText(f"{self.m}:{self.s}")
+
+    def do_scroll(self):
+
+        formla = QFormLayout()
+        for i in self.tasks:
+            btn = QPushButton("  " + i[0])
+            btn.setObjectName("btn")
+            btn.setIcon(QIcon("Icons/check-box (1).png"))
+            formla.addRow(btn)
+            formla.setObjectName("form")
+
+        self.scroll = QScrollArea()
+        groupbox = QGroupBox()
+        groupbox.setLayout(formla)
+        groupbox.resize(300, 100)
+        self.scroll.setWidget(groupbox)
+        self.scroll.setWidgetResizable(True)
+        self.scroll.setFixedHeight(300)
+
+        self.main_layout.addWidget(self.scroll)
+        self.add_but()
+
+        self.start_but.clicked.connect(self.start)
+        self.stop_but.clicked.connect(self.stop)
+        self.return_but.clicked.connect(self.re)
+        self.ti.timeout.connect(self.counter)
+
+        self.setLayout(self.main_layout)
+
+    def set_data(self, email):
+        self.ClearLayout(self.main_layout)
+        self.main_layout.addWidget(self.sub_tit)
+        self.email = email
+        task_cr.execute(f"select task from pomodoro where email='{self.email}'")
+        self.tasks = task_cr.fetchall()
+        if len(self.tasks) == 0:
+            self.main_layout.addWidget(self.empty_tit)
+            self.setLayout(self.main_layout)
+        else:
+            self.do_scroll()
+
+    def ClearLayout(self, layout):
+        if layout is not None:
+            while layout.count():
+                child = layout.takeAt(0)
+                if child.widget() == self.sub_tit :
+                    continue
+                if child.widget() is not None:
+                    child.widget().deleteLater()
+                elif child.layout() is not None:
+                    self.ClearLayout(child.layout())
+    def add_but(self):
+        self.start_but = QPushButton()
+        self.start_but.setText("  Play  ")
+        self.start_but.setIcon(QIcon("Icons/play-button.png"))
+        self.start_but.setIconSize(QSize(20, 40))
+        self.start_but.setObjectName("bn3")
+
+        self.stop_but = QPushButton()
+        self.stop_but.setText("  Stop  ")
+        self.stop_but.setIcon(QIcon("Icons/stop.png"))
+        self.stop_but.setIconSize(QSize(20, 40))
+        self.stop_but.setObjectName("bn3")
+        self.stop_but.resize(10, 20)
+
+        self.return_but = QPushButton()
+        self.return_but.setText("  Return  ")
+        self.return_but.setIcon(QIcon("Icons/return.png"))
+        self.return_but.setIconSize(QSize(20, 40))
+        self.return_but.setObjectName("bn3")
+        self.bn_lay=QHBoxLayout()
+
+        self.bn_lay.addWidget(self.stop_but)
+        self.bn_lay.addWidget(self.start_but)
+        self.bn_lay.addWidget(self.return_but)
+        self.main_layout.addLayout(self.bn_lay)
+    def paintEvent(self, event):
+        pa = QPainter(self)
+        pa.setPen(QPen(Qt.cyan, 5, Qt.SolidLine))
+        pa.setBrush(QBrush(Qt.darkCyan, Qt.SolidPattern))
+        pa.drawEllipse(160, 25, 150, 150)
+
 
 
 class Note(QWidget):
@@ -630,16 +787,16 @@ class Graph(QWidget):
 
 app = QApplication(sys.argv)
 task_page = Task("test")
+timer_page = Timer("test")
 Windows = QStackedWidget()
 Windows.setGeometry(500, 100, 400, 600)
 Windows.setStyleSheet('background-color: #00314f')
 Windows.addWidget(WelcomePage())  # 0
 Windows.addWidget(LoginPage())  # 1
 Windows.addWidget(SignPage())  # 2
-Windows.addWidget(Timer())  # 3
-Windows.addWidget(Note())  # 4
-Windows.addWidget(Converter())  # 5
-Windows.addWidget(Translator())  # 6
-Windows.addWidget(Graph())  # 7
+Windows.addWidget(Note())  # 3
+Windows.addWidget(Converter())  # 4
+Windows.addWidget(Translator())  # 5
+Windows.addWidget(Graph())  # 6
 Windows.show()
 sys.exit(app.exec_())
