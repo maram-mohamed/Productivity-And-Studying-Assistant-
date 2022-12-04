@@ -556,8 +556,8 @@ class Timer(QWidget):
             self.setStyleSheet(style)
 
         self.email = 'test'
-        self.s = 5
-        self.m = 0
+        self.s = 0
+        self.m = 25
 
         back = QPushButton(self)
         back.setObjectName("back")
@@ -746,6 +746,16 @@ class Graph(QWidget):
             style = file.read()
             self.setStyleSheet(style)
         self.graph = None
+        back = QPushButton(self)
+        back.setObjectName("back")
+        back.setIcon(QIcon('Icons/previous.png'))
+        back.setGeometry(20, 10, 30, 30)
+
+        def go_back():
+            Windows.setCurrentIndex(7)
+
+        back.clicked.connect(go_back)
+
         logo = QPushButton()
         logo.setIcon(QIcon("Icons/graph.png"))
         logo.setObjectName("logo")
@@ -764,7 +774,7 @@ class Graph(QWidget):
         b1.setObjectName("show")
 
         main_layout = QVBoxLayout()
-        main_layout.setContentsMargins(20, 20, 20, 50)
+        main_layout.setContentsMargins(40, 40, 40, 50)
         main_layout.addWidget(logo)
         main_layout.addWidget(graph_text)
         main_layout.addWidget(graph_sub_text)
