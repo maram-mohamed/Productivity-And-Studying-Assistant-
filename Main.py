@@ -1,13 +1,12 @@
 import sys
-from PyQt5 import sip
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 import sqlite3
 import re
 from PyQt5.QtCore import *
-from PyQt5 import QtWidgets
-from pyqtgraph import PlotWidget, plot
+import googletrans
+from googletrans import LANGUAGES, Translator
 import pyqtgraph as pg
 
 db = sqlite3.connect('Data.db')
@@ -554,7 +553,6 @@ class Timer(QWidget):
         with open("Style/promo.css") as file:
             style = file.read()
             self.setStyleSheet(style)
-
         self.email = 'test'
         self.s = 0
         self.m = 25
@@ -585,7 +583,6 @@ class Timer(QWidget):
         self.sub_tit.setObjectName("sub")
         self.sub_tit.setAlignment(Qt.AlignCenter)
 
-
         self.empty_tit = QLabel("You list is Empty please go to\n 'To Do list'\n and choose the tasks")
         self.empty_tit.setObjectName("sub")
         self.empty_tit.setAlignment(Qt.AlignCenter)
@@ -600,8 +597,10 @@ class Timer(QWidget):
     def delete_data(self):
         task_cr.execute(f"delete from pomodoro where email='{self.email}'")
         db.commit()
+
     def stop(self):
         self.ti.stop()
+
     def start(self):
         self.ti.start()
 
@@ -637,6 +636,7 @@ class Timer(QWidget):
             formla.setObjectName("form")
 
         self.scroll = QScrollArea()
+        self.scroll.setStyleSheet("QScrollBar{ background-color: none }")
         groupbox = QGroupBox()
         groupbox.setLayout(formla)
         groupbox.resize(300, 100)
@@ -670,12 +670,13 @@ class Timer(QWidget):
         if layout is not None:
             while layout.count():
                 child = layout.takeAt(0)
-                if child.widget() == self.sub_tit :
+                if child.widget() == self.sub_tit:
                     continue
                 if child.widget() is not None:
                     child.widget().deleteLater()
                 elif child.layout() is not None:
                     self.ClearLayout(child.layout())
+
     def add_but(self):
         self.start_but = QPushButton()
         self.start_but.setText("  Play  ")
@@ -695,18 +696,18 @@ class Timer(QWidget):
         self.return_but.setIcon(QIcon("Icons/return.png"))
         self.return_but.setIconSize(QSize(20, 40))
         self.return_but.setObjectName("bn3")
-        self.bn_lay=QHBoxLayout()
+        self.bn_lay = QHBoxLayout()
 
         self.bn_lay.addWidget(self.stop_but)
         self.bn_lay.addWidget(self.start_but)
         self.bn_lay.addWidget(self.return_but)
         self.main_layout.addLayout(self.bn_lay)
+
     def paintEvent(self, event):
         pa = QPainter(self)
         pa.setPen(QPen(Qt.cyan, 5, Qt.SolidLine))
         pa.setBrush(QBrush(Qt.darkCyan, Qt.SolidPattern))
         pa.drawEllipse(160, 25, 150, 150)
-
 
 
 class Note(QWidget):
@@ -721,14 +722,104 @@ class Converter(QWidget):
         # Safaa
 
 
-class Translator(QWidget):
+class TranslatorWindow(QWidget):
     def __init__(self):
         super().__init__()
-        # Soha
+        with open('Style/Translator.css') as file:
+            style = file.read()
+            self.setStyleSheet(style)
+
+        back = QPushButton(self)
+        back.setObjectName("back")
+        back.setIcon(QIcon('Icons/previous.png'))
+        back.setGeometry(20, 10, 30, 30)
+
+        def go_back():
+            Windows.setCurrentIndex(7)
+
+        back.clicked.connect(go_back)
+
+        self.setWindowTitle("Translator")
+
+        self.languages = googletrans.LANGUAGES
+        self.language_list = list(self.languages.values())
+
+        self.trans_from = QComboBox()
+        self.trans_from.addItems(self.language_list)
+        self.trans_from.setCurrentText("english")
+
+        self.trans_to = QComboBox()
+        self.trans_to.addItems(self.language_list)
+        self.trans_to.setCurrentText("arabic")
+
+        From = QLabel("From")
+        From.setAlignment(Qt.AlignCenter)
+        To = QLabel("To")
+        To.setAlignment(Qt.AlignCenter)
+
+        text = QLabel("Translation :")
+        title = QLabel("Translator")
+        title.setAlignment(Qt.AlignCenter)
+        text.setAlignment(Qt.AlignCenter)
+
+        self.In_text = QLineEdit()
+        self.In_text.setPlaceholderText("Enter a text to translate")
+        self.Out_text = QLineEdit()
+        self.Out_text.setPlaceholderText("Your Translation : ")
+
+        logo = QPushButton()
+        logo.setIcon(QIcon("Icons/translator.png"))
+        logo.setObjectName("logo")
+        logo.setIconSize(QSize(60, 60))
+
+        btn_trans = QPushButton("Translate")
+        btn_trans.clicked.connect(self.translate)
+        btn_clear = QPushButton("Clear")
+        btn_clear.clicked.connect(self.clear)
+
+        trans = QVBoxLayout()
+        trans.setContentsMargins(20, 20, 20, 10)
+        layout_1 = QHBoxLayout()
+        layout_2 = QHBoxLayout()
+        layout_3 = QHBoxLayout()
+        trans.addWidget(logo)
+        trans.addWidget(title)
+        layout_1.addWidget(From)
+        layout_1.addWidget(To)
+        layout_2.addWidget(self.trans_from)
+        layout_2.addWidget(self.trans_to)
+        trans.addLayout(layout_1)
+        trans.addLayout(layout_2)
+        trans.addWidget(self.In_text)
+        trans.addWidget(text)
+        trans.addWidget(self.Out_text)
+        layout_3.addWidget(btn_trans)
+        layout_3.addWidget(btn_clear)
+        trans.addLayout(layout_3)
+        trans.setContentsMargins(30, 50, 30, 50)
+        trans.setSpacing(20)
+        self.setLayout(trans)
+
+    def translate(self):
+        text_1 = self.In_text.text()
+        lang_1 = ""
+        lang_2 = ""
+        for lang in LANGUAGES:
+            if LANGUAGES[lang] == self.trans_from.currentText():
+                lang_1 = lang
+            if LANGUAGES[lang] == self.trans_to.currentText():
+                lang_2 = lang
+
+        translate = Translator().translate(text_1, src=lang_1, dest=lang_2)
+        self.Out_text.setText(translate.text)
+
+    def clear(self):
+
+        self.In_text.setText("")
+        self.Out_text.setText("")
 
 
 class GraphWindow(QMainWindow):
-
     def __init__(self, grade, exams, *args, **kwargs):
         super(GraphWindow, self).__init__(*args, **kwargs)
 
@@ -742,7 +833,7 @@ class Graph(QWidget):
     def __init__(self):
         super().__init__()
         # Maram
-        with open('style/graph.css') as file:
+        with open('Style/graph.css') as file:
             style = file.read()
             self.setStyleSheet(style)
         self.graph = None
@@ -806,7 +897,7 @@ Windows.addWidget(LoginPage())  # 1
 Windows.addWidget(SignPage())  # 2
 Windows.addWidget(Note())  # 3
 Windows.addWidget(Converter())  # 4
-Windows.addWidget(Translator())  # 5
+Windows.addWidget(TranslatorWindow())  # 5
 Windows.addWidget(Graph())  # 6
 Windows.show()
 sys.exit(app.exec_())
