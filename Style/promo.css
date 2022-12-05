@@ -1,13 +1,13 @@
 QLabel#la {
     font-size: 40px;
     color: #ffffff;
-    background-color: rgb(1,1,1,0);
+    background-color: rgba(1,1,1,0);
     font-weight: bold;
 }
 QLabel#sub {
     font-weight: bold;
     font-size: 30px;
-    background-color:RGB(1,1,1,0);
+    background-color:Rgba(1,1,1,0);
     color: white;
     font-family: "Bodoni MT"
 
