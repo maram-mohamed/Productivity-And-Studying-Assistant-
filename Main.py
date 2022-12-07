@@ -15,6 +15,7 @@ cr.execute("Create table if not exists user(name text, email text, password text
 task_cr = db.cursor()
 task_cr.execute("Create table if not exists tasks(task text, email text)")
 task_cr.execute("Create table if not exists pomodoro(task text, email text)")
+task_cr.execute("Create table if not exists notes(title text, note text, email text)")
 
 
 class WelcomePage(QWidget):
@@ -392,22 +393,24 @@ class Home(QWidget):
         timer.clicked.connect(to_timer)
 
         def to_note():
-            Windows.setCurrentIndex(3)
+            note_page.set_email(email)
+            Windows.addWidget(note_page)
+            Windows.setCurrentIndex(Windows.count() - 1)
 
         note.clicked.connect(to_note)
 
         def to_converter():
-            Windows.setCurrentIndex(4)
+            Windows.setCurrentIndex(3)
 
         converter.clicked.connect(to_converter)
 
         def to_translator():
-            Windows.setCurrentIndex(5)
+            Windows.setCurrentIndex(4)
 
         translator.clicked.connect(to_translator)
 
         def to_graph():
-            Windows.setCurrentIndex(6)
+            Windows.setCurrentIndex(5)
 
         graph.clicked.connect(to_graph)
 
@@ -494,7 +497,7 @@ class Task(QMainWindow):
         self.reload_UI()
 
         def go_back():
-            Windows.setCurrentIndex(7)
+            Windows.setCurrentIndex(6)
 
         back.clicked.connect(go_back)
 
@@ -563,7 +566,7 @@ class Timer(QWidget):
         back.setGeometry(20, 10, 30, 30)
 
         def go_back():
-            Windows.setCurrentIndex(7)
+            Windows.setCurrentIndex(6)
 
         back.clicked.connect(go_back)
 
@@ -583,11 +586,11 @@ class Timer(QWidget):
         self.sub_tit.setObjectName("sub")
         self.sub_tit.setAlignment(Qt.AlignCenter)
 
-        self.empty_tit = QLabel("You list is Empty please go to\n 'To Do list'\n and choose the tasks")
+        self.empty_tit = QLabel("You Pomodoro Is Empty \nPlease go to 'To-Do List'\n and choose the tasks")
         self.empty_tit.setObjectName("sub")
         self.empty_tit.setAlignment(Qt.AlignCenter)
 
-        self.finish = QLabel("You finsh your tasks\n successfullygo to'To_Do list' \nand choose the tasks ")
+        self.finish = QLabel("You finsh your tasks\n successfully \n go to 'To-Do List'\nand choose the tasks ")
         self.finish.setObjectName("sub")
         self.finish.setAlignment(Qt.AlignCenter)
 
@@ -710,10 +713,187 @@ class Timer(QWidget):
         pa.drawEllipse(160, 25, 150, 150)
 
 
-class Note(QWidget):
-    def __init__(self):
+class NoteButton(QPushButton):
+    def __init__(self, title, note, email):
+        super().__init__(f"   {title}")
+        self.setIcon(QIcon("Icons/pencil.png"))
+        self.NoteEditText = None
+
+        def show_note():
+            self.NoteEditText = NoteText(title, note, email)
+            self.NoteEditText.show()
+            note_page.clear_layout(note_page.main_lay)
+            note_page.reload_UI()
+
+        self.clicked.connect(show_note)
+
+
+class NoteText(QWidget):
+    def __init__(self, title="", note="", email=""):
         super().__init__()
-        # Bessa
+        with open("Style/NoteTextEdit.css") as file:
+            style = file.read()
+            self.setStyleSheet(style)
+        self.note = note
+        self.title = title
+        self.email = email
+        self.top = 200
+        self.left = 400
+        self.width = 600
+        self.height = 400
+
+        self.InitWindow()
+
+    def InitWindow(self):
+        self.setWindowTitle(self.title)
+        self.setGeometry(self.left, self.top, self.width, self.height)
+
+        vbox = QVBoxLayout()
+        plainText = QPlainTextEdit()
+        plainText.setObjectName("filed")
+        plainText.setPlaceholderText("Type Your Note Here")
+        plainText.setUndoRedoEnabled(False)
+        plainText.setPlainText(self.note)
+
+        vbox.addWidget(plainText)
+
+        def save_note():
+            if plainText.toPlainText() != "":
+                cr.execute(f"delete from notes where email='{self.email}' and title='{self.title}'")
+                db.commit()
+                cr.execute(f"insert into notes values ('{self.title}', '{plainText.toPlainText()}', '{self.email}')")
+                db.commit()
+                note_page.clear_layout(note_page.main_lay)
+                note_page.reload_UI()
+                self.close()
+
+        def delete_note():
+            cr.execute(f"delete from notes where email='{self.email}' and title='{self.title}'")
+            db.commit()
+            note_page.clear_layout(note_page.main_lay)
+            note_page.reload_UI()
+            self.close()
+
+        save = QPushButton("Save Note")
+        delete = QPushButton("Delete Note")
+        save.setObjectName("btn")
+        delete.setObjectName("btn")
+        save.clicked.connect(save_note)
+        delete.clicked.connect(delete_note)
+        Buttons_lay = QHBoxLayout()
+        Buttons_lay.addWidget(save)
+        Buttons_lay.addWidget(delete)
+        vbox.addLayout(Buttons_lay)
+        self.setLayout(vbox)
+
+
+class Note(QMainWindow):
+    def __init__(self, email):
+        super().__init__()
+        self.email = email
+        self.widget = QWidget()
+        self.NoteEditText = None
+        with open("Style/task.css") as file:
+            style = file.read()
+            self.widget.setStyleSheet(style)
+        self.setStyleSheet("QScrollBar{ background-color: none }")
+
+        self.scroll = QScrollArea()
+        self.main_lay = QVBoxLayout()
+        self.main_lay.setContentsMargins(20, 50, 20, 10)
+
+        back = QPushButton(self.widget)
+        back.setObjectName("back")
+        back.setIcon(QIcon('Icons/previous.png'))
+        back.setGeometry(20, 10, 30, 30)
+
+        self.logo = QPushButton()
+        self.logo.setIcon(QIcon("Icons/Note.png"))
+        self.logo.setIconSize(QSize(60, 60))
+        self.logo.setObjectName("logo")
+
+        self.title = QLabel("Notes")
+        self.title.setObjectName("title")
+        self.title.setAlignment(Qt.AlignCenter)
+
+        self.add = QPushButton()
+        self.add.setObjectName("add")
+        self.add.setIcon(QIcon("Icons/add.png"))
+        self.add.setIconSize(QSize(20, 20))
+        self.add.setFixedWidth(40)
+
+        note = QLabel("Click to add new Note ")
+        note.setObjectName("note")
+
+        self.add_lay = QHBoxLayout()
+        self.add_lay.addWidget(note)
+        self.add_lay.addWidget(self.add)
+
+        self.sub_title = QLabel("Your Notes")
+        self.sub_title.setObjectName("sub")
+        self.sub_title.setAlignment(Qt.AlignCenter)
+
+        self.scroll.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
+        self.scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
+        self.scroll.setWidgetResizable(True)
+        self.scroll.setWidget(self.widget)
+        self.setCentralWidget(self.scroll)
+        self.setCentralWidget(self.scroll)
+        self.resize(300, 200)
+        self.reload_UI()
+
+        def go_back():
+            Windows.setCurrentIndex(6)
+
+        back.clicked.connect(go_back)
+
+    def add_item(self):
+        self.NoteEditText = None
+        title, ok = QInputDialog().getText(self.widget, "Add title to your note", "Your Title : ", QLineEdit.Normal)
+        if ok:
+            self.NoteEditText = NoteText(title, "", self.email)
+            self.NoteEditText.show()
+            self.clear_layout(self.main_lay)
+            self.reload_UI()
+
+    def set_email(self, email):
+        self.email = email
+        self.add.clicked.connect(self.add_item)
+        self.clear_layout(self.main_lay)
+        self.reload_UI()
+
+    def reload_UI(self):
+        self.main_lay.addWidget(self.logo)
+        self.main_lay.addWidget(self.title)
+        self.main_lay.addLayout(self.add_lay)
+        self.main_lay.addWidget(self.sub_title)
+        task_cr.execute(f"select title,note from notes where email='{self.email}'")
+        notes = task_cr.fetchall()
+        if len(notes) == 0:
+            self.sub_title.setText("You don't have any Notes")
+        else:
+            self.sub_title.setText("Your Notes")
+
+        for note in notes:
+            add_note = NoteButton(note[0], note[1], self.email)
+            add_note.setObjectName("task")
+            self.main_lay.addWidget(add_note)
+        self.main_lay.insertSpacing(2, 40)
+        self.widget.setLayout(self.main_lay)
+
+    def clear_layout(self, layout):
+        if layout is not None:
+            while layout.count():
+                child = layout.takeAt(0)
+                if child.widget() == self.sub_title or \
+                        child.widget() == self.title or \
+                        child.layout() == self.add_lay or \
+                        child.widget() == self.logo:
+                    continue
+                if child.widget() is not None:
+                    child.widget().deleteLater()
+                elif child.layout() is not None:
+                    self.clear_layout(child.layout())
 
 
 class Converter(QWidget):
@@ -735,7 +915,7 @@ class TranslatorWindow(QWidget):
         back.setGeometry(20, 10, 30, 30)
 
         def go_back():
-            Windows.setCurrentIndex(7)
+            Windows.setCurrentIndex(6)
 
         back.clicked.connect(go_back)
 
@@ -843,7 +1023,7 @@ class Graph(QWidget):
         back.setGeometry(20, 10, 30, 30)
 
         def go_back():
-            Windows.setCurrentIndex(7)
+            Windows.setCurrentIndex(6)
 
         back.clicked.connect(go_back)
 
@@ -889,15 +1069,15 @@ class Graph(QWidget):
 app = QApplication(sys.argv)
 task_page = Task("test")
 timer_page = Timer("test")
+note_page = Note("1")
 Windows = QStackedWidget()
 Windows.setGeometry(500, 100, 400, 600)
 Windows.setStyleSheet('background-color: #00314f')
 Windows.addWidget(WelcomePage())  # 0
 Windows.addWidget(LoginPage())  # 1
 Windows.addWidget(SignPage())  # 2
-Windows.addWidget(Note())  # 3
-Windows.addWidget(Converter())  # 4
-Windows.addWidget(TranslatorWindow())  # 5
-Windows.addWidget(Graph())  # 6
+Windows.addWidget(Converter())  # 3
+Windows.addWidget(TranslatorWindow())  # 4
+Windows.addWidget(Graph())  # 5
 Windows.show()
 sys.exit(app.exec_())

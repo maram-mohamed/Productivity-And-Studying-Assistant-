@@ -1,0 +1,21 @@
+QWidget {
+    background-color: #024167
+}
+
+QPlainTextEdit#filed {
+    border-radius: 10px;
+    background-color: white;
+    font-family: "Gill Sans", "Gill Sans MT", Calibri, "Lucida Sans", "Noto Sans", sans-serif;
+
+}
+
+QPushButton#btn  {
+    border: none;
+    padding: 10px;
+    margin: 0 20px 0 20px;
+    background-color: #005aff;
+    color: white;
+    font-weight: bold;
+    border-radius: 10px;
+    font-size: 18px;
+}
