@@ -586,10 +586,6 @@ class Timer(QWidget):
         self.sub_tit.setObjectName("sub")
         self.sub_tit.setAlignment(Qt.AlignCenter)
 
-        self.empty_tit = QLabel("You Pomodoro Is Empty \nPlease go to 'To-Do List'\n and choose the tasks")
-        self.empty_tit.setObjectName("sub")
-        self.empty_tit.setAlignment(Qt.AlignCenter)
-
         self.finish = QLabel("You finsh your tasks\n successfully \n go to 'To-Do List'\nand choose the tasks ")
         self.finish.setObjectName("sub")
         self.finish.setAlignment(Qt.AlignCenter)
@@ -664,7 +660,7 @@ class Timer(QWidget):
         task_cr.execute(f"select task from pomodoro where email='{self.email}'")
         self.tasks = task_cr.fetchall()
         if len(self.tasks) == 0:
-            self.main_layout.addWidget(self.empty_tit)
+            self.add_em_tit()
             self.setLayout(self.main_layout)
         else:
             self.do_scroll()
@@ -705,6 +701,12 @@ class Timer(QWidget):
         self.bn_lay.addWidget(self.start_but)
         self.bn_lay.addWidget(self.return_but)
         self.main_layout.addLayout(self.bn_lay)
+        
+        def add_em_tit(self):
+            self.empty_tit = QLabel("You list is Empty please go to\n 'To Do list'\n and choose the tasks")
+            self.empty_tit.setObjectName("sub")
+            self.empty_tit.setAlignment(Qt.AlignCenter)
+            self.main_layout.addWidget(self.empty_tit)
 
     def paintEvent(self, event):
         pa = QPainter(self)
