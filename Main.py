@@ -702,11 +702,11 @@ class Timer(QWidget):
         self.bn_lay.addWidget(self.return_but)
         self.main_layout.addLayout(self.bn_lay)
         
-        def add_em_tit(self):
-            self.empty_tit = QLabel("You list is Empty please go to\n 'To Do list'\n and choose the tasks")
-            self.empty_tit.setObjectName("sub")
-            self.empty_tit.setAlignment(Qt.AlignCenter)
-            self.main_layout.addWidget(self.empty_tit)
+    def add_em_tit(self):
+        self.empty_tit = QLabel("You list is Empty please go to\n 'To Do list'\n and choose the tasks")
+        self.empty_tit.setObjectName("sub")
+        self.empty_tit.setAlignment(Qt.AlignCenter)
+        self.main_layout.addWidget(self.empty_tit)
 
     def paintEvent(self, event):
         pa = QPainter(self)
