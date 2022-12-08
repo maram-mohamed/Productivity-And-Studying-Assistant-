@@ -754,6 +754,7 @@ class NoteText(QWidget):
         plainText.setPlaceholderText("Type Your Note Here")
         plainText.setUndoRedoEnabled(False)
         plainText.setPlainText(self.note)
+        plainText.setStyleSheet("QScrollBar{ background-color: none }")
 
         vbox.addWidget(plainText)
 
@@ -896,10 +897,836 @@ class Note(QMainWindow):
                     self.clear_layout(child.layout())
 
 
-class Converter(QWidget):
+class Tab(QDialog):
     def __init__(self):
         super().__init__()
-        # Safaa
+
+        back = QPushButton(self)
+        back.setObjectName("back")
+        back.setIcon(QIcon('Icons/previous.png'))
+        back.setGeometry(20, 10, 30, 30)
+        back.setStyleSheet(
+            """
+                QPushButton#back{
+                    border: none;
+                    background-color: rgba(22, 60, 134, 0);
+                    border-radius: 10px;
+                }
+                QPushButton#back:hover{
+                    background-color: #005aff;
+                }
+
+            """
+        )
+
+        def go_back():
+            Windows.setCurrentIndex(6)
+
+        back.clicked.connect(go_back)
+
+        # title = QLabel("Converter", self)
+        # title.setAlignment(Qt.AlignCenter)
+        # title.setStyleSheet("""
+        #     font-weight: bold;
+        #     font-size: 30px;
+        #     color: #f99f34;
+        # """)
+        self.setWindowTitle("Convereter")
+        self.setWindowIcon(QIcon("icon.png"))
+        vbox = QVBoxLayout()
+        # vbox.addWidget(title)
+        vbox.setContentsMargins(20, 70, 20, 0)
+        tabwidget = QTabWidget()
+        font = QFont("Times New Roman", 9)
+        tabwidget.addTab(Tablength(), "Length")
+        self.setStyleSheet("QTabWidget{font-size: 14pt;}")
+        tabwidget.tabBar().setTabTextColor(1, QColor("#123353"))
+
+        tabwidget.setFont(font)
+        tabwidget.addTab(Tabtime(), "Time")
+        tabwidget.addTab(Tabdata(), "Data")
+        tabwidget.addTab(Tabtemperature(), "Temperature")
+        tabwidget.addTab(Tabsystem(), "Numeral System")
+        tabwidget.tabBar().setTabTextColor(0, QColor("#034973"))
+        tabwidget.tabBar().setTabTextColor(1, QColor("#034973"))
+        tabwidget.tabBar().setTabTextColor(2, QColor("#034973"))
+        tabwidget.tabBar().setTabTextColor(3, QColor("#034973"))
+        tabwidget.tabBar().setTabTextColor(4, QColor("#034973"))
+        vbox.addWidget(tabwidget)
+        self.setLayout(vbox)
+
+
+class Tablength(QWidget):
+    def __init__(self):
+        super().__init__()
+
+        with open("Style/converter.css") as file:
+            style = file.read()
+            self.setStyleSheet(style)
+
+        enterlabel = QLabel("Enter A Value")
+        # enterlabel.setAlignment(Qt.AlignCenter)
+        enterlabeledit = QLineEdit()
+        enterlabeledit.setPlaceholderText("Type a value here")
+        enterlabeledit.setObjectName("enter")
+        fromlabel = QLabel("From")
+        # fromlabel.setAlignment(Qt.AlignCenter)
+        fromlabel.setObjectName("from")
+        combobox = QComboBox()
+        combobox.setObjectName("com")
+
+        combobox.addItem("Inches")
+        combobox.addItem("Feet")
+        combobox.addItem("Yards")
+        combobox.addItem("KiloMeters")
+        combobox.addItem("Meters")
+        combobox.addItem("CentiMeters")
+        combobox.addItem("millimeters")
+        font = QFont('Times New Roman', 12)
+        combobox.setFont(font)
+        combobox.setStyleSheet("QListView{background-color: white;}")
+        tolabel = QLabel("To")
+        # tolabel.setAlignment(Qt.AlignCenter)
+        combobox2 = QComboBox()
+        combobox2.setObjectName("com")
+        combobox2.addItem("Inches")
+        combobox2.addItem("Feet")
+        combobox2.addItem("Yards")
+        combobox2.addItem("KiloMeters")
+        combobox2.addItem("Meters")
+        combobox2.addItem("CentiMeters")
+        combobox2.addItem("millimeters")
+        font = QFont('Times New Roman', 12)
+        combobox2.setFont(font)
+        combobox2.setStyleSheet("QListView{background-color: white;}")
+
+        buttonconvert = QPushButton("Convert")
+        buttonconvert.setObjectName("button")
+        result = QLabel("....")
+
+        def convertlength():
+            if combobox.currentText() == "Inches" and combobox2.currentText() == "Inches":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {enterlabeledit.text()} {combobox2.currentText()}")
+            elif combobox.currentText() == "Inches" and combobox2.currentText() == "Feet":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) / 12} {combobox2.currentText()}")
+            elif combobox.currentText() == "Inches" and combobox2.currentText() == "Yards":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) / 36} {combobox2.currentText()}")
+            elif combobox.currentText() == "Inches" and combobox2.currentText() == "KiloMeters":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) / 39370} {combobox2.currentText()}")
+            elif combobox.currentText() == "Inches" and combobox2.currentText() == "Meters":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) / 39.37} {combobox2.currentText()}")
+            elif combobox.currentText() == "Inches" and combobox2.currentText() == "CentiMeters":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) * 2.54} {combobox2.currentText()}")
+            elif combobox.currentText() == "Inches" and combobox2.currentText() == "millimeters":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) * 25.4} {combobox2.currentText()}")
+
+            if combobox.currentText() == "Feet" and combobox2.currentText() == "Inches":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) * 12} {combobox2.currentText()}")
+            elif combobox.currentText() == "Feet" and combobox2.currentText() == "Feet":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {enterlabeledit.text()} {combobox2.currentText()}")
+            elif combobox.currentText() == "Feet" and combobox2.currentText() == "Yards":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) / 3} {combobox2.currentText()}")
+            elif combobox.currentText() == "Feet" and combobox2.currentText() == "KiloMeters":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) / 3281} {combobox2.currentText()}")
+            elif combobox.currentText() == "Feet" and combobox2.currentText() == "Meters":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) / 3.281} {combobox2.currentText()}")
+            elif combobox.currentText() == "Feet" and combobox2.currentText() == "CentiMeters":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) * 30.48} {combobox2.currentText()}")
+            elif combobox.currentText() == "Feet" and combobox2.currentText() == "millimeters":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) * 304.8} {combobox2.currentText()}")
+
+            if combobox.currentText() == "Yards" and combobox2.currentText() == "Inches":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) * 36} {combobox2.currentText()}")
+            elif combobox.currentText() == "Yards" and combobox2.currentText() == "Feet":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) * 3} {combobox2.currentText()}")
+            elif combobox.currentText() == "Yards" and combobox2.currentText() == "Yards":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {enterlabeledit.text()} {combobox2.currentText()}")
+            elif combobox.currentText() == "Yards" and combobox2.currentText() == "KiloMeters":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) / 1094} {combobox2.currentText()}")
+            elif combobox.currentText() == "Yards" and combobox2.currentText() == "Meters":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) / 1.094} {combobox2.currentText()}")
+            elif combobox.currentText() == "Yards" and combobox2.currentText() == "CentiMeters":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) * 91.44} {combobox2.currentText()}")
+            elif combobox.currentText() == "Yards" and combobox2.currentText() == "millimeters":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) * 914.4} {combobox2.currentText()}")
+
+            if combobox.currentText() == "KiloMeters" and combobox2.currentText() == "Inches":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) * 39370} {combobox2.currentText()}")
+            elif combobox.currentText() == "KiloMeters" and combobox2.currentText() == "Feet":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) * 3281} {combobox2.currentText()}")
+            elif combobox.currentText() == "KiloMeters" and combobox2.currentText() == "Yards":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) * 1094} {combobox2.currentText()}")
+            elif combobox.currentText() == "KiloMeters" and combobox2.currentText() == "KiloMeters":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {enterlabeledit.text()} {combobox2.currentText()}")
+            elif combobox.currentText() == "KiloMeters" and combobox2.currentText() == "Meters":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) * 1000} {combobox2.currentText()}")
+            elif combobox.currentText() == "KiloMeters" and combobox2.currentText() == "CentiMeters":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) * 100000} {combobox2.currentText()}")
+            elif combobox.currentText() == "KiloMeters" and combobox2.currentText() == "millimeters":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) * 1e+6} {combobox2.currentText()}")
+
+            if combobox.currentText() == "Meters" and combobox2.currentText() == "Inches":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) * 39.37} {combobox2.currentText()}")
+            elif combobox.currentText() == "Meters" and combobox2.currentText() == "Feet":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) * 3.281} {combobox2.currentText()}")
+            elif combobox.currentText() == "Meters" and combobox2.currentText() == "Yards":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) * 1.094} {combobox2.currentText()}")
+            elif combobox.currentText() == "Meters" and combobox2.currentText() == "KiloMeters":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) / 1000} {combobox2.currentText()}")
+            elif combobox.currentText() == "Meters" and combobox2.currentText() == "Meters":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {enterlabeledit.text()} {combobox2.currentText()}")
+            elif combobox.currentText() == "Meters" and combobox2.currentText() == "CentiMeters":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) * 100} {combobox2.currentText()}")
+            elif combobox.currentText() == "Meters" and combobox2.currentText() == "millimeters":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) * 1000} {combobox2.currentText()}")
+
+            if combobox.currentText() == "CentiMeters" and combobox2.currentText() == "Inches":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) / 2.54} {combobox2.currentText()}")
+            elif combobox.currentText() == "CentiMeters" and combobox2.currentText() == "Feet":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) / 30.48} {combobox2.currentText()}")
+            elif combobox.currentText() == "CentiMeters" and combobox2.currentText() == "Yards":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) / 91.44} {combobox2.currentText()}")
+            elif combobox.currentText() == "CentiMeters" and combobox2.currentText() == "KiloMeters":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) / 100000} {combobox2.currentText()}")
+            elif combobox.currentText() == "CentiMeters" and combobox2.currentText() == "Meters":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) / 100} {combobox2.currentText()}")
+            elif combobox.currentText() == "CentiMeters" and combobox2.currentText() == "CentiMeters":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {enterlabeledit.text()} {combobox2.currentText()}")
+            elif combobox.currentText() == "CentiMeters" and combobox2.currentText() == "millimeters":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) * 10} {combobox2.currentText()}")
+
+            if combobox.currentText() == "millimeters" and combobox2.currentText() == "Inches":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) / 25.4} {combobox2.currentText()}")
+            elif combobox.currentText() == "millimeters" and combobox2.currentText() == "Feet":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) / 304.8} {combobox2.currentText()}")
+            elif combobox.currentText() == "millimeters" and combobox2.currentText() == "Yards":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) / 914.4} {combobox2.currentText()}")
+            elif combobox.currentText() == "millimeters" and combobox2.currentText() == "KiloMeters":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) / 1e+6} {combobox2.currentText()}")
+            elif combobox.currentText() == "millimeters" and combobox2.currentText() == "Meters":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) / 1000} {combobox2.currentText()}")
+            elif combobox.currentText() == "millimeters" and combobox2.currentText() == "CentiMeters":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) / 10} {combobox2.currentText()}")
+            elif combobox.currentText() == "millimeters" and combobox2.currentText() == "millimeters":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {enterlabeledit.text()} {combobox2.currentText()}")
+
+        buttonconvert.clicked.connect(convertlength)
+        vbox = QVBoxLayout()
+        vbox.addWidget(enterlabel)
+        vbox.addWidget(enterlabeledit)
+        vbox.addWidget(fromlabel)
+
+        vbox.addWidget(combobox)
+        vbox.addWidget(tolabel)
+        vbox.addWidget(combobox2)
+        vbox.addWidget(result)
+        vbox.addWidget(buttonconvert)
+        self.setLayout(vbox)
+
+
+class Tabtime(QWidget):
+    def __init__(self):
+        super().__init__()
+        with open("Style/converter.css") as file:
+            style = file.read()
+            self.setStyleSheet(style)
+
+        enterlabel = QLabel("Enter A Value")
+        # enterlabel.setAlignment(Qt.AlignCenter)
+
+        enterlabeledit = QLineEdit()
+        enterlabeledit.setObjectName("enter")
+        enterlabeledit.setPlaceholderText("Type a value here")
+
+        fromlabel = QLabel("From")
+        # fromlabel.setAlignment(Qt.AlignCenter)
+
+        combobox = QComboBox()
+        combobox.setObjectName("com")
+        combobox.addItem("Century")
+        combobox.addItem("Decade")
+        combobox.addItem("Month")
+        combobox.addItem("Week")
+        combobox.addItem("Day")
+        combobox.addItem("Hour")
+        combobox.addItem("Minute")
+        combobox.addItem("Second")
+        font = QFont('Times New Roman', 12)
+        combobox.setFont(font)
+        combobox.setStyleSheet("QListView{background-color: white;}")
+
+        tolabel = QLabel("To")
+        # tolabel.setAlignment(Qt.AlignCenter)
+        combobox2 = QComboBox()
+        combobox2.setObjectName("com")
+        combobox2.addItem("Century")
+        combobox2.addItem("Decade")
+        combobox2.addItem("Month")
+        combobox2.addItem("Week")
+        combobox2.addItem("Day")
+        combobox2.addItem("Hour")
+        combobox2.addItem("Minute")
+        combobox2.addItem("Second")
+        font = QFont('Times New Roman', 12)
+        combobox2.setFont(font)
+        combobox2.setStyleSheet("QListView{background-color: white;}")
+        buttonconvert = QPushButton("Convert")
+        buttonconvert.setObjectName("button")
+        result = QLabel("....")
+
+        def converttime():
+            if combobox.currentText() == "Month" and combobox2.currentText() == "Month":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {enterlabeledit.text()} {combobox2.currentText()}")
+            elif combobox.currentText() == "Month" and combobox2.currentText() == "Week":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) * 4} {combobox2.currentText()}")
+            elif combobox.currentText() == "Month" and combobox2.currentText() == "Day":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) * 30} {combobox2.currentText()}")
+            elif combobox.currentText() == "Month" and combobox2.currentText() == "Hour":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) * 730} {combobox2.currentText()}")
+            elif combobox.currentText() == "Month" and combobox2.currentText() == "Minute":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) * 43800} {combobox2.currentText()}")
+            elif combobox.currentText() == "Month" and combobox2.currentText() == "Second":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) * 2628003} {combobox2.currentText()}")
+            elif combobox.currentText() == "Month" and combobox2.currentText() == "Century":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) / 1200} {combobox2.currentText()}")
+            elif combobox.currentText() == "Month" and combobox2.currentText() == "Decade":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) / 120} {combobox2.currentText()}")
+
+            if combobox.currentText() == "Week" and combobox2.currentText() == "Month":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) / 4} {combobox2.currentText()}")
+            elif combobox.currentText() == "Week" and combobox2.currentText() == "Week":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text())} {combobox2.currentText()}")
+            elif combobox.currentText() == "Week" and combobox2.currentText() == "Day":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) * 7} {combobox2.currentText()}")
+            elif combobox.currentText() == "Week" and combobox2.currentText() == "Hour":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) * 168} {combobox2.currentText()}")
+            elif combobox.currentText() == "Week" and combobox2.currentText() == "Minute":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) * 10080} {combobox2.currentText()}")
+            elif combobox.currentText() == "Week" and combobox2.currentText() == "Second":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) * 604800} {combobox2.currentText()}")
+            elif combobox.currentText() == "Week" and combobox2.currentText() == "Century":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) / 5214} {combobox2.currentText()}")
+            elif combobox.currentText() == "Week" and combobox2.currentText() == "Decade":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) / 521.4} {combobox2.currentText()}")
+
+            if combobox.currentText() == "Day" and combobox2.currentText() == "Month":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) / 30} {combobox2.currentText()}")
+            elif combobox.currentText() == "Day" and combobox2.currentText() == "Week":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) / 7} {combobox2.currentText()}")
+            elif combobox.currentText() == "Day" and combobox2.currentText() == "Day":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text())} {combobox2.currentText()}")
+            elif combobox.currentText() == "Day" and combobox2.currentText() == "Hour":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) * 24} {combobox2.currentText()}")
+            elif combobox.currentText() == "Day" and combobox2.currentText() == "Minute":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) * 1440} {combobox2.currentText()}")
+            elif combobox.currentText() == "Day" and combobox2.currentText() == "Second":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) * 86400} {combobox2.currentText()}")
+            elif combobox.currentText() == "Day" and combobox2.currentText() == "Century":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) / 36500} {combobox2.currentText()}")
+            elif combobox.currentText() == "Day" and combobox2.currentText() == "Decade":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) / 3650} {combobox2.currentText()}")
+
+            if combobox.currentText() == "Hour" and combobox2.currentText() == "Month":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) / 730} {combobox2.currentText()}")
+            elif combobox.currentText() == "Hour" and combobox2.currentText() == "Week":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) / 168} {combobox2.currentText()}")
+            elif combobox.currentText() == "Hour" and combobox2.currentText() == "Day":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) / 24} {combobox2.currentText()}")
+            elif combobox.currentText() == "Hour" and combobox2.currentText() == "Hour":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text())} {combobox2.currentText()}")
+            elif combobox.currentText() == "Hour" and combobox2.currentText() == "Minute":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) * 60} {combobox2.currentText()}")
+            elif combobox.currentText() == "Hour" and combobox2.currentText() == "Second":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) * 3600} {combobox2.currentText()}")
+            elif combobox.currentText() == "Hour" and combobox2.currentText() == "Century":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) / 876000} {combobox2.currentText()}")
+            elif combobox.currentText() == "Hour" and combobox2.currentText() == "Decade":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) / 87600} {combobox2.currentText()}")
+
+            if combobox.currentText() == "Minute" and combobox2.currentText() == "Month":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) / 43800} {combobox2.currentText()}")
+            elif combobox.currentText() == "Minute" and combobox2.currentText() == "Week":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) / 10080} {combobox2.currentText()}")
+            elif combobox.currentText() == "Minute" and combobox2.currentText() == "Day":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) / 1440} {combobox2.currentText()}")
+            elif combobox.currentText() == "Minute" and combobox2.currentText() == "Hour":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) / 60} {combobox2.currentText()}")
+            elif combobox.currentText() == "Minute" and combobox2.currentText() == "Minute":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text())} {combobox2.currentText()}")
+            elif combobox.currentText() == "Minute" and combobox2.currentText() == "Second":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) * 60} {combobox2.currentText()}")
+            elif combobox.currentText() == "Minute" and combobox2.currentText() == "Century":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) / 5.256e+7} {combobox2.currentText()}")
+            elif combobox.currentText() == "Minute" and combobox2.currentText() == "Decade":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) / 5.256e+6} {combobox2.currentText()}")
+
+            if combobox.currentText() == "Second" and combobox2.currentText() == "Month":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) / 2.628e+6} {combobox2.currentText()}")
+            elif combobox.currentText() == "Second" and combobox2.currentText() == "Week":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) / 604800} {combobox2.currentText()}")
+            elif combobox.currentText() == "Second" and combobox2.currentText() == "Day":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) / 86400} {combobox2.currentText()}")
+            elif combobox.currentText() == "Second" and combobox2.currentText() == "Hour":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) / 3600} {combobox2.currentText()}")
+            elif combobox.currentText() == "Second" and combobox2.currentText() == "Minute":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) / 60} {combobox2.currentText()}")
+            elif combobox.currentText() == "Second" and combobox2.currentText() == "Second":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text())} {combobox2.currentText()}")
+            elif combobox.currentText() == "Second" and combobox2.currentText() == "Century":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) / 3.154e+9} {combobox2.currentText()}")
+            elif combobox.currentText() == "Second" and combobox2.currentText() == "Decade":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) / 3.154e+8} {combobox2.currentText()}")
+
+            if combobox.currentText() == "Century" and combobox2.currentText() == "Month":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) * 1200} {combobox2.currentText()}")
+            elif combobox.currentText() == "Century" and combobox2.currentText() == "Week":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) * 5214} {combobox2.currentText()}")
+            elif combobox.currentText() == "Century" and combobox2.currentText() == "Day":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) * 36500} {combobox2.currentText()}")
+            elif combobox.currentText() == "Century" and combobox2.currentText() == "Hour":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) * 876000} {combobox2.currentText()}")
+            elif combobox.currentText() == "Century" and combobox2.currentText() == "Minute":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) * 5.256e+7} {combobox2.currentText()}")
+            elif combobox.currentText() == "Century" and combobox2.currentText() == "Second":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) * 3.154e+9} {combobox2.currentText()}")
+            elif combobox.currentText() == "Century" and combobox2.currentText() == "Century":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text())} {combobox2.currentText()}")
+            elif combobox.currentText() == "Century" and combobox2.currentText() == "Decade":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) * 10} {combobox2.currentText()}")
+
+            if combobox.currentText() == "Decade" and combobox2.currentText() == "Month":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) * 120} {combobox2.currentText()}")
+            elif combobox.currentText() == "Decade" and combobox2.currentText() == "Week":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) * 521.4} {combobox2.currentText()}")
+            elif combobox.currentText() == "Decade" and combobox2.currentText() == "Day":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) * 3650} {combobox2.currentText()}")
+            elif combobox.currentText() == "Decade" and combobox2.currentText() == "Hour":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) * 87600} {combobox2.currentText()}")
+            elif combobox.currentText() == "Decade" and combobox2.currentText() == "Minute":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) * 5.256e+6} {combobox2.currentText()}")
+            elif combobox.currentText() == "Decade" and combobox2.currentText() == "Second":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) * 3.154e+8} {combobox2.currentText()}")
+            elif combobox.currentText() == "Decade" and combobox2.currentText() == "Century":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) / 10} {combobox2.currentText()}")
+            elif combobox.currentText() == "Decade" and combobox2.currentText() == "Decade":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text())} {combobox2.currentText()}")
+
+        buttonconvert.clicked.connect(converttime)
+        vbox = QVBoxLayout()
+        vbox.addWidget(enterlabel)
+        vbox.addWidget(enterlabeledit)
+        vbox.addWidget(fromlabel)
+        vbox.addWidget(combobox)
+        vbox.addWidget(tolabel)
+        vbox.addWidget(combobox2)
+        vbox.addWidget(result)
+        vbox.addWidget(buttonconvert)
+
+        self.setLayout(vbox)
+
+        ##############################
+
+
+class Tabdata(QWidget):
+    def __init__(self):
+        super().__init__()
+        with open("Style/converter.css") as file:
+            style = file.read()
+            self.setStyleSheet(style)
+
+        enterlabel = QLabel("Enter A Value")
+        # enterlabel.setAlignment(Qt.AlignCenter)
+
+        enterlabeledit = QLineEdit()
+        enterlabeledit.setPlaceholderText("Type a value here")
+        enterlabeledit.setObjectName("enter")
+        fromlabel = QLabel("From")
+        # fromlabel.setAlignment(Qt.AlignCenter)
+
+        combobox = QComboBox()
+        combobox.setObjectName("com")
+        combobox.addItem("TeraByte")
+        combobox.addItem("GigaByte")
+        combobox.addItem("MegaByte")
+        combobox.addItem("KiloByte")
+        combobox.addItem("Byte")
+        font = QFont('Times New Roman', 12)
+        combobox.setFont(font)
+        combobox.setStyleSheet("QListView{background-color: white;}")
+
+        tolabel = QLabel("To")
+        # tolabel.setAlignment(Qt.AlignCenter)
+        combobox2 = QComboBox()
+        combobox2.setObjectName("com")
+        combobox2.addItem("TeraByte")
+        combobox2.addItem("GigaByte")
+        combobox2.addItem("MegaByte")
+        combobox2.addItem("KiloByte")
+        combobox2.addItem("Byte")
+        font = QFont('Times New Roman', 12)
+        combobox2.setStyleSheet("QListView{background-color: white;}")
+
+        combobox2.setFont(font)
+        buttonconvert = QPushButton("Convert")
+        buttonconvert.setObjectName("button")
+        result = QLabel("....")
+
+        def converttime():
+            if combobox.currentText() == "TeraByte" and combobox2.currentText() == "TeraByte":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {enterlabeledit.text()} {combobox2.currentText()}")
+            elif combobox.currentText() == "TeraByte" and combobox2.currentText() == "GigaByte":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) * 1000} {combobox2.currentText()}")
+            elif combobox.currentText() == "TeraByte" and combobox2.currentText() == "MegaByte":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) * 1e+6} {combobox2.currentText()}")
+            elif combobox.currentText() == "TeraByte" and combobox2.currentText() == "KiloByte":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) * 1e+9} {combobox2.currentText()}")
+            elif combobox.currentText() == "TeraByte" and combobox2.currentText() == "Byte":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) * 1e+12} {combobox2.currentText()}")
+
+            if combobox.currentText() == "GigaByte" and combobox2.currentText() == "GigaByte":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {enterlabeledit.text()} {combobox2.currentText()}")
+            elif combobox.currentText() == "GigaByte" and combobox2.currentText() == "TeraByte":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) / 1000} {combobox2.currentText()}")
+            elif combobox.currentText() == "GigaByte" and combobox2.currentText() == "MegaByte":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) * 1000} {combobox2.currentText()}")
+            elif combobox.currentText() == "GigaByte" and combobox2.currentText() == "KiloByte":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) * 1e+6} {combobox2.currentText()}")
+            elif combobox.currentText() == "GigaByte" and combobox2.currentText() == "Byte":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) * 1e+9} {combobox2.currentText()}")
+
+            if combobox.currentText() == "MegaByte" and combobox2.currentText() == "MegaByte":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {enterlabeledit.text()} {combobox2.currentText()}")
+            elif combobox.currentText() == "MegaByte" and combobox2.currentText() == "TeraByte":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) / 1e+6} {combobox2.currentText()}")
+            elif combobox.currentText() == "MegaByte" and combobox2.currentText() == "GigaByte":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) / 1000} {combobox2.currentText()}")
+            elif combobox.currentText() == "MegaByte" and combobox2.currentText() == "KiloByte":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) * 1000} {combobox2.currentText()}")
+            elif combobox.currentText() == "MegaByte" and combobox2.currentText() == "Byte":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) * 1e+6} {combobox2.currentText()}")
+
+            if combobox.currentText() == "KiloByte" and combobox2.currentText() == "KiloByte":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {enterlabeledit.text()} {combobox2.currentText()}")
+            elif combobox.currentText() == "KiloByte" and combobox2.currentText() == "TeraByte":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) / 1e+9} {combobox2.currentText()}")
+            elif combobox.currentText() == "KiloByte" and combobox2.currentText() == "GigaByte":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) / 1e+6} {combobox2.currentText()}")
+            elif combobox.currentText() == "KiloByte" and combobox2.currentText() == "MegaByte":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) / 1000} {combobox2.currentText()}")
+            elif combobox.currentText() == "KiloByte" and combobox2.currentText() == "Byte":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) * 1000} {combobox2.currentText()}")
+
+            if combobox.currentText() == "Byte" and combobox2.currentText() == "Byte":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {enterlabeledit.text()} {combobox2.currentText()}")
+            elif combobox.currentText() == "Byte" and combobox2.currentText() == "TeraByte":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) / 1e+12} {combobox2.currentText()}")
+            elif combobox.currentText() == "Byte" and combobox2.currentText() == "GigaByte":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) / 1e+9} {combobox2.currentText()}")
+            elif combobox.currentText() == "Byte" and combobox2.currentText() == "MegaByte":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) / 1e+6} {combobox2.currentText()}")
+            elif combobox.currentText() == "Byte" and combobox2.currentText() == "KiloByte":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) / 1000} {combobox2.currentText()}")
+
+        buttonconvert.clicked.connect(converttime)
+        vbox = QVBoxLayout()
+        vbox.addWidget(enterlabel)
+        vbox.addWidget(enterlabeledit)
+        vbox.addWidget(fromlabel)
+        vbox.addWidget(combobox)
+        vbox.addWidget(tolabel)
+        vbox.addWidget(combobox2)
+        vbox.addWidget(result)
+        vbox.addWidget(buttonconvert)
+        self.setLayout(vbox)
+
+
+class Tabtemperature(QWidget):
+    def __init__(self):
+        super().__init__()
+        with open("Style/converter.css") as file:
+            style = file.read()
+            self.setStyleSheet(style)
+
+        enterlabel = QLabel("Enter A Value")
+        # enterlabel.setAlignment(Qt.AlignCenter)
+        enterlabeledit = QLineEdit()
+        enterlabeledit.setPlaceholderText("Type a value here")
+        enterlabeledit.setObjectName("enter")
+        fromlabel = QLabel("From")
+        # fromlabel.setAlignment(Qt.AlignCenter)
+
+        combobox = QComboBox()
+        combobox.setObjectName("com")
+        combobox.addItem("Degree Celsius")
+        combobox.addItem("Fahrenheit")
+        combobox.addItem("Kelvin")
+        font = QFont('Times New Roman', 12)
+        combobox.setStyleSheet("QListView{background-color: white;}")
+
+        combobox.setFont(font)
+        tolabel = QLabel("To")
+        # tolabel.setAlignment(Qt.AlignCenter)
+        combobox2 = QComboBox()
+        combobox2.setObjectName("com")
+        combobox2.addItem("Degree Celsius")
+        combobox2.addItem("Fahrenheit")
+        combobox2.addItem("Kelvin")
+        font = QFont('Times New Roman', 12)
+        combobox2.setStyleSheet("QListView{background-color: white;}")
+
+        combobox2.setFont(font)
+        buttonconvert = QPushButton("Convert")
+        buttonconvert.setObjectName("button")
+        result = QLabel("....")
+
+        def converttemperature():
+            if combobox.currentText() == "Degree Celsius" and combobox2.currentText() == "Degree Celsius":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {enterlabeledit.text()} {combobox2.currentText()}")
+            elif combobox.currentText() == "Degree Celsius" and combobox2.currentText() == "Fahrenheit":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {(int(enterlabeledit.text()) * 9 / 5) + 32} {combobox2.currentText()}")
+            elif combobox.currentText() == "Degree Celsius" and combobox2.currentText() == "Kelvin":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) + 273.15} {combobox2.currentText()}")
+
+            if combobox.currentText() == "Fahrenheit" and combobox2.currentText() == "Fahrenheit":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {enterlabeledit.text()} {combobox2.currentText()}")
+            elif combobox.currentText() == "Fahrenheit" and combobox2.currentText() == "Degree Celsius":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {(int(enterlabeledit.text()) - 32) * 5 / 9} {combobox2.currentText()}")
+            elif combobox.currentText() == "Fahrenheit" and combobox2.currentText() == "Kelvin":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {((int(enterlabeledit.text()) - 32) * 5 / 9) + 273.15}  {combobox2.currentText()}")
+
+            if combobox.currentText() == "Kelvin" and combobox2.currentText() == "Kelvin":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {enterlabeledit.text()} {combobox2.currentText()}")
+            elif combobox.currentText() == "Kelvin" and combobox2.currentText() == "Degree Celsius":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {int(enterlabeledit.text()) - 273.15} {combobox2.currentText()}")
+            elif combobox.currentText() == "Kelvin" and combobox2.currentText() == "Fahrenheit":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {((int(enterlabeledit.text()) - 273.15) * 9 / 5) + 32} {combobox2.currentText()}")
+
+        buttonconvert.clicked.connect(converttemperature)
+        vbox = QVBoxLayout()
+        vbox.addWidget(enterlabel)
+        vbox.addWidget(enterlabeledit)
+        vbox.addWidget(fromlabel)
+        vbox.addWidget(combobox)
+        vbox.addWidget(tolabel)
+        vbox.addWidget(combobox2)
+        vbox.addWidget(result)
+        vbox.addWidget(buttonconvert)
+        self.setLayout(vbox)
+
+
+class Tabsystem(QWidget):
+    def __init__(self):
+        super().__init__()
+        with open("Style/converter.css") as file:
+            style = file.read()
+            self.setStyleSheet(style)
+
+        enterlabel = QLabel("Enter A Value")
+        # enterlabel.setAlignment(Qt.AlignCenter)
+        enterlabeledit = QLineEdit()
+        enterlabeledit.setObjectName("enter")
+        enterlabeledit.setPlaceholderText("Type a value here")
+        fromlabel = QLabel("From")
+        # fromlabel.setAlignment(Qt.AlignCenter)
+
+        combobox = QComboBox()
+        combobox.setObjectName("com")
+        combobox.addItem("Decimal")
+
+        font = QFont('Times New Roman', 12)
+        combobox.setStyleSheet("QListView{background-color: white;}")
+
+        combobox.setFont(font)
+        tolabel = QLabel("To")
+        # tolabel.setAlignment(Qt.AlignCenter)
+        combobox2 = QComboBox()
+        combobox2.setObjectName("com")
+        combobox2.addItem("Binary")
+        combobox2.addItem("Decimal")
+        combobox2.addItem("Octal")
+        combobox2.addItem("HexaDecimal")
+        font = QFont('Times New Roman', 12)
+        combobox2.setStyleSheet("QListView{background-color: white;}")
+
+        combobox2.setFont(font)
+
+        buttonconvert = QPushButton("Convert")
+        buttonconvert.setObjectName("button")
+        result = QLabel("....")
+
+
+        def convertsystem():
+            if combobox.currentText() == "Decimal" and combobox2.currentText() == "Decimal":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {enterlabeledit.text()} {combobox2.currentText()}")
+            elif combobox.currentText() == "Decimal" and combobox2.currentText() == "Binary":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {bin(int(enterlabeledit.text()))} {combobox2.currentText()}")
+            elif combobox.currentText() == "Decimal" and combobox2.currentText() == "HexaDecimal":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {hex(int(enterlabeledit.text()))} {combobox2.currentText()}")
+            elif combobox.currentText() == "Decimal" and combobox2.currentText() == "Octal":
+                result.setText(
+                    f"{enterlabeledit.text()} {combobox.currentText()} = {oct(int(enterlabeledit.text()))} {combobox2.currentText()}")
+
+        buttonconvert.clicked.connect(convertsystem)
+        vbox = QVBoxLayout()
+        vbox.addWidget(enterlabel)
+        vbox.addWidget(enterlabeledit)
+        vbox.addWidget(fromlabel)
+        vbox.addWidget(combobox)
+        vbox.addWidget(tolabel)
+        vbox.addWidget(combobox2)
+        vbox.addWidget(result)
+        vbox.addWidget(buttonconvert)
+        self.setLayout(vbox)
 
 
 class TranslatorWindow(QWidget):
@@ -1076,7 +1903,7 @@ Windows.setStyleSheet('background-color: #00314f')
 Windows.addWidget(WelcomePage())  # 0
 Windows.addWidget(LoginPage())  # 1
 Windows.addWidget(SignPage())  # 2
-Windows.addWidget(Converter())  # 3
+Windows.addWidget(Tab())  # 3
 Windows.addWidget(TranslatorWindow())  # 4
 Windows.addWidget(Graph())  # 5
 Windows.show()
