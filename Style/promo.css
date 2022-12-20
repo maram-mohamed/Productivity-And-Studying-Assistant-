@@ -13,16 +13,17 @@ QLabel#sub {
 
 }
 QPushButton#bn3{
-    border-radius: 20%;
-    background-color: #188bdb;
+    border-radius: 10px;
+    background-color: #4984bb;
     color: #EEEEEE;
+    padding: 10px;
     font-size: 18px;
     font-weight: bold;
 }
 QPushButton#btn{
     border: none;
     text-align: left;
-    background-color: #02446c;
+    background-color: #014067;
     padding: 20px;
     border-radius: 10px;
     color: white;
@@ -50,5 +51,5 @@ QPushButton#back:hover{
 }
 
 QPushButton#bn3:hover{
-    background-color: #02578a;
+    background-color: #2a75f5;
 }

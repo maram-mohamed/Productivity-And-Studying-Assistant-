@@ -13,11 +13,15 @@ QPushButton#button{
     margin: 13px;
     padding: 15px;
     background-color: #4984bb;
+    /*background-color: #4082c0;*/
     color: white;
     font-weight: bold;
     border-radius: 8px;
     font-size: 23px;
     font-family:"Times New Roman";
+}
+QPushButton#button:hover {
+    background-color: #2a75f5;
 }
 
 QTabWidget#Tabtime
@@ -47,5 +51,5 @@ QLabel {
     font-family:"Times New Roman";
 }
 QWidget{
-    background : #00314f;
+    /*background : #00314f;*/
 }

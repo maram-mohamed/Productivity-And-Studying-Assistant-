@@ -88,10 +88,23 @@ class LoginPage(QWidget):
         email_field.setPlaceholderText("Email")
         email_field.setObjectName("field")
 
+        #0779C1
+        btnToggle = QToolButton(email_field)
+        btnToggle.setIcon(QIcon('Icons/email.png'))
+        btnToggle.setCursor(Qt.ArrowCursor)
+        btnToggle.setGeometry(20, 29, 20, 20)
+        btnToggle.setStyleSheet('QToolButton { border: none; padding: 0px; background-color: rgba(231, 231, 231, 0);}')
+
         password_field = QLineEdit()
         password_field.setEchoMode(QLineEdit.Password)
         password_field.setPlaceholderText("Password")
         password_field.setObjectName("field")
+
+        btnToggle = QToolButton(password_field)
+        btnToggle.setIcon(QIcon('Icons/lock.png'))
+        btnToggle.setCursor(Qt.ArrowCursor)
+        btnToggle.setGeometry(20, 29, 20, 20)
+        btnToggle.setStyleSheet('QToolButton { border: none; padding: 0px; background-color: rgba(231, 231, 231, 0);}')
 
         login_btn = QPushButton("Login")
         login_btn.setObjectName("login")
@@ -151,19 +164,43 @@ class SignPage(QWidget):
         name.setPlaceholderText("Your Name")
         name.setObjectName("field")
 
+        btnToggle = QToolButton(name)
+        btnToggle.setIcon(QIcon('Icons/user.png'))
+        btnToggle.setCursor(Qt.ArrowCursor)
+        btnToggle.setGeometry(20, 26, 15, 15)
+        btnToggle.setStyleSheet('QToolButton { border: none; padding: 0px; background-color: rgba(231, 231, 231, 0);}')
+
         email_field = QLineEdit()
         email_field.setPlaceholderText("Email")
         email_field.setObjectName("field")
+
+        btnToggle = QToolButton(email_field)
+        btnToggle.setIcon(QIcon('Icons/email.png'))
+        btnToggle.setCursor(Qt.ArrowCursor)
+        btnToggle.setGeometry(20, 26, 15, 15)
+        btnToggle.setStyleSheet('QToolButton { border: none; padding: 0px; background-color: rgba(231, 231, 231, 0);}')
 
         password_field = QLineEdit()
         password_field.setEchoMode(QLineEdit.Password)
         password_field.setPlaceholderText("Password")
         password_field.setObjectName("field")
 
+        btnToggle = QToolButton(password_field)
+        btnToggle.setIcon(QIcon('Icons/lock.png'))
+        btnToggle.setCursor(Qt.ArrowCursor)
+        btnToggle.setGeometry(20, 26, 15, 15)
+        btnToggle.setStyleSheet('QToolButton { border: none; padding: 0px; background-color: rgba(231, 231, 231, 0);}')
+
         co_password_field = QLineEdit()
         co_password_field.setEchoMode(QLineEdit.Password)
         co_password_field.setPlaceholderText("Confirm Password")
         co_password_field.setObjectName("field")
+
+        btnToggle = QToolButton(co_password_field)
+        btnToggle.setIcon(QIcon('Icons/lock.png'))
+        btnToggle.setCursor(Qt.ArrowCursor)
+        btnToggle.setGeometry(20, 26, 15, 15)
+        btnToggle.setStyleSheet('QToolButton { border: none; padding: 0px; background-color: rgba(231, 231, 231, 0);}')
 
         signup_btn = QPushButton("Sign Up")
         signup_btn.setObjectName("signup")
@@ -187,7 +224,7 @@ class SignPage(QWidget):
                 cr.execute(
                     f"insert into user values('{name.text()}', '{email_field.text()}', '{password_field.text()}')")
                 db.commit()
-                db.close()
+                # db.close()
                 home_p = Home(name.text(), email_field.text(), password_field.text())
                 Windows.addWidget(home_p)
                 Windows.setCurrentIndex(Windows.count() - 1)
@@ -680,20 +717,20 @@ class Timer(QWidget):
         self.start_but = QPushButton()
         self.start_but.setText("  Play  ")
         self.start_but.setIcon(QIcon("Icons/play-button.png"))
-        self.start_but.setIconSize(QSize(20, 40))
+        self.start_but.setIconSize(QSize(15, 15))
         self.start_but.setObjectName("bn3")
 
         self.stop_but = QPushButton()
         self.stop_but.setText("  Stop  ")
         self.stop_but.setIcon(QIcon("Icons/stop.png"))
-        self.stop_but.setIconSize(QSize(20, 40))
+        self.stop_but.setIconSize(QSize(15, 15))
         self.stop_but.setObjectName("bn3")
         self.stop_but.resize(10, 20)
 
         self.return_but = QPushButton()
         self.return_but.setText("  Return  ")
         self.return_but.setIcon(QIcon("Icons/return.png"))
-        self.return_but.setIconSize(QSize(20, 40))
+        self.return_but.setIconSize(QSize(20, 20))
         self.return_but.setObjectName("bn3")
         self.bn_lay = QHBoxLayout()
 
@@ -926,20 +963,22 @@ class Tab(QDialog):
 
         back.clicked.connect(go_back)
 
-        # title = QLabel("Converter", self)
-        # title.setAlignment(Qt.AlignCenter)
-        # title.setStyleSheet("""
-        #     font-weight: bold;
-        #     font-size: 30px;
-        #     color: #f99f34;
-        # """)
+        title = QLabel("Converter", self)
+        title.setAlignment(Qt.AlignCenter)
+        title.setStyleSheet("""
+            font-weight: bold;
+            font-size: 30px;
+            color: #4082c0;
+        """)
         self.setWindowTitle("Convereter")
         self.setWindowIcon(QIcon("icon.png"))
         vbox = QVBoxLayout()
-        # vbox.addWidget(title)
-        vbox.setContentsMargins(20, 70, 20, 0)
+        vbox.addWidget(title)
+        vbox.setContentsMargins(20, 40, 20, 0)
+        vbox.setSpacing(30)
         tabwidget = QTabWidget()
         font = QFont("Times New Roman", 9)
+        tabwidget.addTab(Tabsystem(), "Numeral System")
         tabwidget.addTab(Tablength(), "Length")
         self.setStyleSheet("QTabWidget{font-size: 14pt;}")
         tabwidget.tabBar().setTabTextColor(1, QColor("#123353"))
@@ -948,7 +987,6 @@ class Tab(QDialog):
         tabwidget.addTab(Tabtime(), "Time")
         tabwidget.addTab(Tabdata(), "Data")
         tabwidget.addTab(Tabtemperature(), "Temperature")
-        tabwidget.addTab(Tabsystem(), "Numeral System")
         tabwidget.tabBar().setTabTextColor(0, QColor("#034973"))
         tabwidget.tabBar().setTabTextColor(1, QColor("#034973"))
         tabwidget.tabBar().setTabTextColor(2, QColor("#034973"))
@@ -1900,8 +1938,8 @@ task_page = Task("test")
 timer_page = Timer("test")
 note_page = Note("1")
 Windows = QStackedWidget()
-Windows.setGeometry(500, 100, 400, 600)
-Windows.setStyleSheet('background-color: #00314f')
+Windows.setGeometry(550, 200, 400, 600)
+Windows.setStyleSheet('background-color: #024772')
 Windows.addWidget(WelcomePage())  # 0
 Windows.addWidget(LoginPage())  # 1
 Windows.addWidget(SignPage())  # 2
@@ -1910,3 +1948,5 @@ Windows.addWidget(TranslatorWindow())  # 4
 Windows.addWidget(Graph())  # 5
 Windows.show()
 sys.exit(app.exec_())
+
+# 00314f

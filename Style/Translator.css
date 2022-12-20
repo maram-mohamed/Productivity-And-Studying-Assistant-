@@ -7,20 +7,22 @@ QPushButton#back{
 QPushButton#back:hover{
     background-color: #005aff;
 }
-
 QPushButton {
     border: none;
     /*margin: 10px;*/
     padding: 10px;
-    background-color: #005aff;
+    background-color: #4984bb;
     color: white;
     font-weight: bold;
     border-radius: 10px;
     font-size: 18px;
 }
+QPushButton:hover {
+    background-color: #2a75f5;
+}
 
 QComboBox {
-    background-color: #034973;
+    background-color: #014067;
     color: white;
     /*margin: 10px;*/
     padding: 10px;

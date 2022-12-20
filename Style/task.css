@@ -10,7 +10,7 @@ QPushButton#back:hover{
 QPushButton#task{
     border: none;
     text-align: left;
-    background-color: #02446c;
+    background-color: #014067;
     padding: 20px;
     border-radius: 10px;
     color: white;
@@ -19,6 +19,7 @@ QPushButton#task{
 
 QPushButton#task:hover{
     background-color: #02578a;
+    /*background-color: #024772;*/
 }
 
 QLabel#title {
