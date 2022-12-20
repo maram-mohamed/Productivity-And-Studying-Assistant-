@@ -7,12 +7,18 @@ I developed a Desktop Application for studying assistance needs. The students ca
 + The Project Contains a registration system as you can see below in the images provided.
 
 ## Features:
--[x] To-do List feature which students can use to write the tasks they want to do.
--[x] Pomodoro Technique which counts 25 Minutes for you to work on your tasks.
--[x] Note page which the students can write notes in.And registration system to the application.
--[x] Translator like Google translation that contains all languages.
--[x] Converter Between Numeral System,Length,Time and Bytes unites.
--[x] Graph diagram for students to show the performance in their last exams on an x-y axis.
+
+- [x] To-do List feature which students can use to write the tasks they want to do.
+
+- [x] Pomodoro Technique which counts 25 Minutes for you to work on your tasks.
+
+- [x] Note page which the students can write notes in.And registration system to the application.
+
+- [x] Translator like Google translation that contains all languages.
+
+- [x] Converter Between Numeral System,Length,Time and Bytes unites.
+
+- [x] Graph diagram for students to show the performance in their last exams on an x-y axis.
 
 
 ## ScreenShot From the project:
