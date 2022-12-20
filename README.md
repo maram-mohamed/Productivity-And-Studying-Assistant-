@@ -7,6 +7,7 @@ I developed a Desktop Application for studying assistance needs. The students ca
 + The Project Contains a registration system as you can see below in the images provided.
 
 ## Features:
+
 - [x] To-do List feature which students can use to write the tasks they want to do.
 
 - [x] Pomodoro Technique which counts 25 Minutes for you to work on your tasks.
